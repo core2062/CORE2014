@@ -14,7 +14,6 @@ class CORE2014 : public SimpleRobot {
 	ShooterSubsystem shooter;
 	PickupSubsystem pickup;
 	
-	
 public:
 	CORE2014():
 		robot(),
@@ -40,7 +39,7 @@ public:
 
 	void OperatorControl()
 	{
-		
+		robot.teleopInit();
 		while (IsOperatorControl() && !IsDisabled())
 		{
 			robot.teleop();
