@@ -16,9 +16,12 @@ class CORERobot {
 	std::vector<CORESubsystem*> subsystems;
 public:
 	JoystickCache joystick;
+	Compressor* compressor;
+	
 	CORERobot():
 		subsystems(),
-		joystick()
+		joystick(),
+		compressor(0)
 	{}
 	
 	void add(CORESubsystem& subsystem);
@@ -28,6 +31,12 @@ public:
 	void robotInit(void);
 	void teleopInit(void);
 	void teleop(void);
+	
+	~CORERobot(){
+		delete compressor;
+	}
+	
+	void requirePneumatics(void);
 };
 
 class CORESubsystem{
