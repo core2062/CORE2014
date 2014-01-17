@@ -8,14 +8,22 @@ using namespace CORE;
 
 class ShooterSubsystem : public CORESubsystem {
 	
+	Victor shooterWheel;
+	DigitalInput limitSwitch;
+	Timer shootTimer;
+	
+	bool armed;
+	
 public:
 	std::string name(void){
 		return "shooter";
 	}	
 	ShooterSubsystem(CORERobot& robot):
-		CORESubsystem(robot)
+		CORESubsystem(robot),
+		shooterWheel(5),
+		limitSwitch(5)
 	{
-
+		armed = false;
 	}
 	
 	void robotInit(void);
