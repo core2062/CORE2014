@@ -1,9 +1,11 @@
 #include "DriveSubsystem.h"
 
 void DriveSubsystem::robotInit(void){
-	
+	robot.requirePneumatics();
 }
 void DriveSubsystem::teleopInit(void){
+	robot.compressor->Start();
+	
 	robot.joystick.register_axis("mag", 1, 2);
 	robot.joystick.register_axis("kaj-rot", 1, 4);
 	

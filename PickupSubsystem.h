@@ -7,7 +7,7 @@
 using namespace CORE;
 
 class PickupSubsystem : public CORESubsystem {
-	
+	// pneumatics go here
 public:
 	std::string name(void){
 		return "pickup";

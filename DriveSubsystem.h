@@ -20,7 +20,7 @@ class DriveSubsystem : public CORESubsystem {
 	Encoder leftEncoder;
 	
 	COREDrive drive;
-	
+	//pneumatics go here
 public:
 	std::string name(void){
 		return "drive";
