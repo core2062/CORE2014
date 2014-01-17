@@ -8,10 +8,10 @@ using namespace CORE;
 
 
 class DriveSubsystem : public CORESubsystem {
-	Jaguar leftFront;
-	Jaguar leftBack;
-	Jaguar rightFront;
-	Jaguar rightBack;
+	Victor leftFront;
+	Victor leftBack;
+	Victor rightFront;
+	Victor rightBack;
 	
 	DoubleSpeed rightDrive;
 	DoubleSpeed leftDrive;
