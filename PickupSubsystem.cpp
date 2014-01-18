@@ -21,10 +21,10 @@ void PickupSubsystem::teleop(void){
 	double pickup_output = 0;
 	double roller_output = roller_motor.Get();
 	
-	if (robot.joystick.button("pickup-out")){
+	if (robot.joystick.button("pickup-out") && !pickup_limit_out.Get()){
 		pickup_output = pickup_speed;
 	}
-	else if (robot.joystick.button("pickup-in")){
+	else if (robot.joystick.button("pickup-in") && !pickup_limit_in.Get()){
 		pickup_output = -pickup_speed;
 	}
 	

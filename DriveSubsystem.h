@@ -29,10 +29,10 @@ public:
 	DriveSubsystem(CORERobot& robot):
 		CORESubsystem(robot),
 		//1 is just a placeholder for motor ports
-		leftFront(1),
-		leftBack(2),
-		rightFront(3),
-		rightBack(4),
+		leftFront(3),
+		leftBack(4),
+		rightFront(5),
+		rightBack(6),
 		
 		rightDrive(leftFront, leftBack),
 		leftDrive(rightFront, rightBack),

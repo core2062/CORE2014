@@ -29,12 +29,12 @@ void ShooterSubsystem::teleop(void){
 	} else if (shootTimer.Get() != 0){
 		output = speed;
 	}
-	
-	if (shootTimer.Get() == SmartDashboard::GetNumber("shoot-delay")){
+	if (shootTimer.Get() >= SmartDashboard::GetNumber("shoot-delay")){
 		shootTimer.Stop();
 		shootTimer.Reset();
 		output = 0;
 		armed = false;
 	}
+	cout << "timer: " << shootTimer.Get() << " armed: " << armed << endl;
 	shooterWheel.Set(output);
 }

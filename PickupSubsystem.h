@@ -22,10 +22,10 @@ public:
 	
 	PickupSubsystem(CORERobot& robot):
 		CORESubsystem(robot),
-		roller_motor(21),
-		pickup_motor(23),
-		pickup_limit_in(25),
-		pickup_limit_out(24)
+		roller_motor(10),
+		pickup_motor(2),
+		pickup_limit_in(7),
+		pickup_limit_out(8)
 	{
 		old_roller_in = false;
 		old_roller_out = false;

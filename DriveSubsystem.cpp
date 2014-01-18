@@ -1,7 +1,7 @@
 #include "DriveSubsystem.h"
 
 void DriveSubsystem::robotInit(void){
-	robot.requirePneumatics();
+//	robot.requirePneumatics();
 }
 void DriveSubsystem::teleopInit(void){
 	robot.compressor->Start();

@@ -20,8 +20,8 @@ public:
 	}	
 	ShooterSubsystem(CORERobot& robot):
 		CORESubsystem(robot),
-		shooterWheel(5),
-		limitSwitch(5)
+		shooterWheel(10),
+		limitSwitch(8)
 	{
 		armed = false;
 	}

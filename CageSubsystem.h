@@ -7,8 +7,8 @@
 using namespace CORE;
 
 class CageSubsystem : public CORESubsystem {
-	DoubleSolenoid leftWing;
 	DoubleSolenoid rightWing;
+	DoubleSolenoid leftWing;
 	
 	int oldValue;
 	bool isOut;
