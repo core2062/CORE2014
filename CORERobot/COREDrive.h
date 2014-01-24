@@ -46,6 +46,8 @@ public:
 	
 	void EtherArcade(double mag, double rotate, double a, double b);
 	void ArcadeDrive(float moveValue, float rotateValue, bool squaredInputs = false);
+	void CulverDrive(float throttle, float steer_x, float steer_y, bool quickturn,
+		double gain_radius, double gain_raw );
 };
 
 class CORERateLimiter{

@@ -23,9 +23,12 @@ void PickupSubsystem::teleop(void){
 	
 	if (robot.joystick.button("pickup-out") && !pickup_limit_out.Get()){
 		pickup_output = pickup_speed;
+	
 	}
+	
 	else if (robot.joystick.button("pickup-in") && !pickup_limit_in.Get()){
 		pickup_output = -pickup_speed;
+	
 	}
 	
 	if (robot.joystick.button("roller-in") && !old_roller_in){
@@ -45,7 +48,20 @@ void PickupSubsystem::teleop(void){
 	old_roller_out = robot.joystick.button("roller-out");
 	old_roller_in = robot.joystick.button("roller-in");
 	
-	pickup_motor.Set(pickup_output);
+	//pickup_motor.Set(pickup_output);
+	if (pickup_output > 0 ){
+		pickup_solenoid_left.Set(DoubleSolenoid::kForward);
+		pickup_solenoid_right.Set(DoubleSolenoid::kForward);
+
+	}else	if (pickup_output < 0 ){
+		pickup_solenoid_left.Set(DoubleSolenoid::kReverse);
+		pickup_solenoid_right.Set(DoubleSolenoid::kReverse);
+
+	} else {
+		pickup_solenoid_left.Set(DoubleSolenoid::kOff);
+	    pickup_solenoid_right.Set(DoubleSolenoid::kOff);
+
+	}
 	roller_motor.Set(roller_output);
 }
 	

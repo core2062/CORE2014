@@ -21,6 +21,9 @@ class DriveSubsystem : public CORESubsystem {
 	
 	COREDrive drive;
 	//pneumatics go here
+	
+	bool quickturn;
+	bool quickturn_old;
 public:
 	std::string name(void){
 		return "drive";
@@ -29,10 +32,10 @@ public:
 	DriveSubsystem(CORERobot& robot):
 		CORESubsystem(robot),
 		//1 is just a placeholder for motor ports
-		leftFront(3),
-		leftBack(4),
-		rightFront(5),
-		rightBack(6),
+		leftFront(1),
+		leftBack(3),
+		rightFront(2),
+		rightBack(4),
 		
 		rightDrive(leftFront, leftBack),
 		leftDrive(rightFront, rightBack),
@@ -43,7 +46,8 @@ public:
 		drive(leftDrive, rightDrive)
 		
 	{
-
+		quickturn = false;
+		quickturn_old = false;
 	}
 	
 	void robotInit(void);

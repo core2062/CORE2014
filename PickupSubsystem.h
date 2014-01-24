@@ -8,7 +8,8 @@ using namespace CORE;
 
 class PickupSubsystem : public CORESubsystem {
 	Victor roller_motor;
-	Victor pickup_motor;
+	DoubleSolenoid pickup_solenoid_left;
+	DoubleSolenoid pickup_solenoid_right;
 	DigitalInput pickup_limit_in;
 	DigitalInput pickup_limit_out;
 
@@ -23,7 +24,8 @@ public:
 	PickupSubsystem(CORERobot& robot):
 		CORESubsystem(robot),
 		roller_motor(10),
-		pickup_motor(2),
+		pickup_solenoid_left(1,2), //module 2 removed for testing
+		pickup_solenoid_right(2,3,4),
 		pickup_limit_in(7),
 		pickup_limit_out(8)
 	{

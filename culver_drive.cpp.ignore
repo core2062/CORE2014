@@ -1,0 +1,276 @@
+#include <math.h>
+
+#undef __AlternateRawImplementation__
+
+inline double sgn(double x)
+{
+	return (x>=0)?1:-1;
+}
+
+const double PI=3.14159265358979323846;
+const double PI2=PI*2.0;
+const double PI_2=PI/2.0;
+
+inline double DEG_2_RAD(double x) 
+{	
+	return	((x)*PI/180.0); 
+}
+inline double RAD_2_DEG(double x) 
+{
+	return ((x)*180.0/PI); 
+}
+
+//INTERPOLATION CURVES (CONST DATA)
+
+//Since these go past 90 I'm assuming it intended to steer past 90 on the wheel and filter to 115 from 1 to 0
+const double c_radius_theta_x[] = {0, 90, 115, 180};
+const double c_radius_theta_z[] = {1,  1,   0,   0};
+//This table appears to have no effect since z is 1 all across
+const double c_r_warp_x[] = {0, 45, 90, 135, 180};
+const double c_r_warp_z[] = {1, 1, 1, 1, 1};
+
+//These appear to only yield 1.0 from 115-170 degrees... I have not tested this alternate implementation
+#ifdef __AlternateRawImplementation__
+const double c_raw_theta_x[] = {0, 90, 115, 170, 180};
+const double c_raw_theta_z[] = {0,  0,   1,   1, 0};
+#endif
+
+//CALIBRATIONS (CAL DATA)
+double c_gain_radius = 1.2;
+double c_gain_raw = 1.5;
+
+//Note for Palardy size is now cardinal ;)
+double interp_2d(double x,const double *x_tbl,const double *z_tbl, size_t size)
+{
+	size_t num_cur = 0;
+	//num_cur index will point to the element that is closest to number in table without going over
+	while((x_tbl[num_cur] <= x) && (num_cur < (size-1)))
+		num_cur++;
+
+	//we assume x fits within range of table
+	assert(num_cur);
+
+	int num_last = num_cur - 1;
+	//Find fraction between num_cur and num_cur--
+	double x_frac;
+	{
+		const double lt = x_tbl[num_last];
+		const double gt = x_tbl[num_cur];
+		const double tmp = x - lt;
+		const double range = gt - lt;
+		x_frac = tmp / range;
+
+		//printf("Interpolation: Found X:%f between lt:%f and gt:%f (pts %d and %d) frac=%f",x,lt,gt,num_last,num_cur,x_frac);
+	}
+
+	//Find the two points on the z table
+	double z_out;
+	{
+		const double lt = z_tbl[num_last];
+		const double gt = z_tbl[num_cur];
+		const double range = gt - lt;
+		z_out = (range * x_frac) + lt;
+		//printf(" z: lt:%f gt:%f zout:%f\n",lt,gt,z_out);
+	}
+
+	return z_out;
+}
+
+//This version of it clamps the range... but also will change any NAN cases to zero (This is a generic solution over _isnan() )
+inline double limit_motor(double x)
+{
+	//Clamp range
+	if (x>0.0)
+	{
+		if (x>1.0)
+			x=1.0;
+	}
+	else if (x<0.0)
+	{
+		if (x<-1.0)
+			x=-1.0;
+	}
+	else
+	{
+		x=0.0;  //is nan case
+		assert(false);  //Sanity check, This shouldn't happen with the simple math in this example
+	}
+	return x;
+}
+
+//Math function for Culver Drive
+void culver_drive(double throttle, double wheelx, double wheely, bool quickturn, double &left, double &right)
+{
+	//double theta = fabs(atan((wheely/wheelx)));
+
+	//I am confused as part of the code appears that we work only from a range of -90 - 90... while the tables go past 90
+	//The original implementation shows any down stick movement is the same as if it were up
+	//For this new replacement if we want to support values past 90 we can remove the fabs()... while this idea would support the real model 
+	//of a steering wheel. I can see it being an undesirable effect (hence the filtering)... especially since there is the quick turn option
+
+	//Find arctan of wheel stick relative to vertical... note relative to vertical suggests that we swap the x and y components!
+	#if 0
+	const double theta_native = atan2(wheelx,fabs(wheely));
+	#else
+	const double theta_native = atan2(wheelx,-wheely);  //I suspect we wanted to go past 90 based from the tables
+	#endif
+
+	//Test atan2 against atan... this test only succeeds if we use the fabs(wheely) version
+	#if 0
+	//note Palardy... there was a bug 59.29577... should be 57.29577
+	double test = fabs(atan((wheelx/wheely)));  //if it is relative to vertical the x and y components need to be swapped
+	double sign_test = sgn(wheelx);
+	assert (fabs(theta - (test * sign_test))<1e-5);  //check for equality within 5 decimal places
+	printf("%.2f %.2f %.2f %.2f\n",RAD_2_DEG(theta),RAD_2_DEG(test * sign_test),wheelx,wheely);
+	#endif
+
+	// and turn it into degrees
+	//convert to absolute value and in degrees (grrrr should never solve code in degrees)  ;)
+	const double sign = sgn(theta_native);  //keep the sign to restore it later
+	const double theta = fabs(RAD_2_DEG(theta_native));  
+
+	//as it stands this statement has no effect if c_r_warp_z has all 1's
+	assert(interp_2d(theta,c_r_warp_x,c_r_warp_z,_countof(c_r_warp_x)) == 1.0);
+
+	//Find the magnitude of the wheel stick
+	double r = sqrt(((wheely * wheely) + (wheelx * wheelx))) * interp_2d(theta,c_r_warp_x,c_r_warp_z,_countof(c_r_warp_x));
+
+	//Find the Radius Enablement curve
+	double radius_en = interp_2d(theta,c_radius_theta_x,c_radius_theta_z,_countof(c_radius_theta_x));
+
+	printf("%.2f, %.2f, %.2f, %.2f, %.2f\n",theta * sign,r,radius_en,wheelx,wheely);
+
+
+	//Find the radius component based on r, theta, enablement curve, gain, throttle, sign
+	double radius = r * theta/90 * radius_en * c_gain_radius * throttle * sign;
+
+	//Find the raw component based on r, radius enablement curve, gain, sign
+	#ifndef __AlternateRawImplementation__
+	//double raw = r * radius_en * c_gain_raw * sign;
+	double raw = r * theta/90 * radius_en * c_gain_raw * sign;  //this needs theta
+	#else
+	//Alternate raw implementation
+	double raw = r * interp_2d(theta, c_raw_theta_x, c_raw_theta_z, _countof(c_raw_theta_x)) * c_gain_raw * sign;
+	#endif
+
+	//Find Left and Right powers as sums
+	double tmpleft = throttle;
+	double tmpright = throttle;
+
+	//Comment out the entire IF/Else block for alternate raw mode
+	if(quickturn)
+	{
+		#if 1
+		tmpleft += raw;
+		tmpright -= raw;
+		#else
+		//Find the left and right powers as the sums - Use for Alternate Raw
+		tmpleft += radius + raw;
+		tmpright -= radius + raw;
+		#endif
+	}
+	else
+	{
+		tmpleft += radius;
+		tmpright -= radius;
+	}
+
+	//clamp value range to +-1
+	left = limit_motor(tmpleft);
+	right = limit_motor(tmpright);
+}
+
+//reciprocal
+const double c_half_pi_reciprocal=1.0 / (PI_2);  //its more efficient to multiply than to divide... this is around 0.6366...
+const double c_taper_limit=DEG_2_RAD(115.0);
+const double c_taper_length_recip=1.0 / (c_taper_limit-PI_2);
+void culver_drive2(double throttle, double wheelx, double wheely, bool quickturn, double &left, double &right)
+{
+	//Find arctan of wheel stick relative to vertical... note relative to vertical suggests that we swap the x and y components!
+	const double theta = atan2(wheelx,-wheely);
+
+	//Find the magnitude of the wheel stick
+	double r = sqrt(((wheely * wheely) + (wheelx * wheelx)));
+
+	//taper off past 90 - 115 using simple linear interpolation 
+	double radius_filter=1.0;
+	if (fabs(theta)>PI_2)
+	{
+		const double abs_theta=fabs(theta);
+		if (abs_theta<c_taper_limit)
+			radius_filter=(1.0-((abs_theta-PI_2) * c_taper_length_recip));
+		else
+			radius_filter=0;
+	}
+
+	//convert to degrees for UI viewing
+	//printf("%.2f, %.2f, %.2f, %.2f, %.2f\n",RAD_2_DEG(theta),r,radius_filter,wheelx,wheely);
+
+
+	//Find Left and Right powers as sums
+	double tmpleft = throttle;
+	double tmpright = throttle;
+
+	if(quickturn)
+	{
+		//Find the raw component based on r, radius filter curve, gain, sign
+		#ifndef __AlternateRawImplementation__
+		const double raw = r * theta*c_half_pi_reciprocal * radius_filter * c_gain_raw; 
+//		const double raw = r * interp_2d(theta, c_raw_theta_x, c_raw_theta_z, _countof(c_raw_theta_x)) * c_gain_raw);
+
+		printf("%.2f, %.2f, %.2f  -->  X(%.2f) Y(%.2f)\n",r, RAD_2_DEG(theta) ,raw,wheelx,wheely);
+
+		//here is a separate alternate raw case
+		#if 1
+		tmpleft += raw;
+		tmpright -= raw;
+		#else
+		const double radius = r * theta*c_half_pi_reciprocal * radius_filter * c_gain_radius * throttle;
+		//Find the left and right powers as the sums - Use for Alternate Raw
+		tmpleft += radius + raw;
+		tmpright -= radius + raw;
+		#endif
+	}
+	else
+	{
+		//Find the radius component based on r, theta, filter curve, gain, throttle, sign
+		const double radius = r * theta*c_half_pi_reciprocal * radius_filter * c_gain_radius * throttle;
+
+		printf("%.2f, %.2f, %.2f  -->  X(%.2f) Y(%.2f)\n",r,RAD_2_DEG(theta),radius,wheelx,wheely);
+		tmpleft += radius;
+		tmpright -= radius;
+	}
+
+	//clamp value range to +-1
+	left = limit_motor(tmpleft);
+	right = limit_motor(tmpright);
+}
+
+void main()
+{
+	double theta=-PI;
+	const double NoIterations=100.0;
+	const double rho=PI2 / NoIterations;  //compute step size... by dividing the interval by number of iterations
+	const bool DoRaw=false;
+	//do a sweep test full forward throttle non quick turn
+	while (theta<PI)
+	{
+		double Left,Right;
+		double x=sin(theta);
+		double y=-cos(theta);
+		//Test with weaker magnitude
+		#if 0
+		y*=0.5;
+		x*=0.5;
+		#endif
+		//Test with no Y
+		#if 0
+		y=0;
+		#endif
+		//swapped as 0 degrees if vertical alignment
+		//culver_drive(1.0,x,y,false,Left,Right);
+		culver_drive2(1.0,x,y,DoRaw,Left,Right);
+		theta+=rho;
+	}
+	printf("\n");
+}
