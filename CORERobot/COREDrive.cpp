@@ -65,20 +65,15 @@ void COREDrive::ArcadeDrive(float moveValue, float rotateValue, bool squaredInpu
 	if (squaredInputs)
 	{
 		// square the inputs (while preserving the sign) to increase fine control while permitting full power
-		if (moveValue >= 0.0)
-		{			
+		if (moveValue >= 0.0){			
 			moveValue = (moveValue * moveValue);
-		}
-		else
-		{
+		}else{
 			moveValue = -(moveValue * moveValue);
 		}
-		if (rotateValue >= 0.0)
-		{
+		
+		if (rotateValue >= 0.0){
 			rotateValue = (rotateValue * rotateValue);
-		}
-		else
-		{
+		}else{
 			rotateValue = -(rotateValue * rotateValue);
 		}
 	}

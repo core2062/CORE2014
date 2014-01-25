@@ -24,6 +24,8 @@ class DriveSubsystem : public CORESubsystem {
 	
 	bool quickturn;
 	bool quickturn_old;
+	
+	SendableChooser driveChooser;
 public:
 	std::string name(void){
 		return "drive";
@@ -43,7 +45,9 @@ public:
 		rightEncoder(1,2),
 		leftEncoder(3,4),
 		
-		drive(leftDrive, rightDrive)
+		drive(leftDrive, rightDrive),
+		
+		driveChooser()
 		
 	{
 		quickturn = false;
