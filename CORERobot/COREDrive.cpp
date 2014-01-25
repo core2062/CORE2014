@@ -108,7 +108,7 @@ void COREDrive::ArcadeDrive(float moveValue, float rotateValue, bool squaredInpu
 	SetLeftRightMotorOutputs(leftMotorOutput, rightMotorOutput);
 }
 
-#include <math.h>
+#include <cmath>
 
 #undef __AlternateRawImplementation__
 
@@ -144,33 +144,38 @@ void COREDrive::CulverDrive(float throttle, float steer_x, float steer_y, bool q
 		double gain_radius, double gain_raw ) {
 	
 		//Find arctan of wheel stick relative to vertical... note relative to vertical suggests that we swap the x and y components!
-	const double theta = atan2(steer_x, -steer_y);
+	double theta = atan2(steer_x, -steer_y);
 
 	//Find the magnitude of the wheel stick
 	double r = sqrt(((steer_y * steer_y) + (steer_x * steer_x)));
 
 	//taper off past 90 - 115 using simple linear interpolation 
 	double radius_filter = 1.0;
-	if (fabs(theta) > PI_2) {
-		const double abs_theta = fabs(theta);
+//	cout << "abstheta " << std::abs(theta) << endl;
+	if (std::abs(theta) > PI_2) {
+		const double abs_theta = std::abs(theta);
 		if (abs_theta < c_taper_limit)
 			radius_filter = (1.0 - ((abs_theta - PI_2) * c_taper_length_recip));
 		else
 			radius_filter = 0;
 	}
+//	cout << "radiusfilter "<< radius_filter <<endl;
 	
-	SmartDashboard::PutNumber("s-x", steer_x);
-	SmartDashboard::PutNumber("s-y", steer_y);
-	SmartDashboard::PutNumber("s-r", r);
-	SmartDashboard::PutNumber("theta", RAD_2_DEG(theta));
+//	SmartDashboard::PutNumber("culver-mag", throttle);
+//	SmartDashboard::PutNumber("s-x", steer_x);
+//	SmartDashboard::PutNumber("s-y", -steer_y);
+//	SmartDashboard::PutNumber("s-r", r);
+//	SmartDashboard::PutNumber("theta", RAD_2_DEG(theta));
 
-	double left, right = throttle;
+	double left = throttle;
+	double right = throttle;
+//	cout << left<< " : "<<right;
 	if (quickturn) {
-		const double raw = r * theta * c_half_pi_reciprocal * radius_filter * gain_raw;
+		const double raw = r * theta * c_half_pi_reciprocal * radius_filter * gain_raw * -1;
 		//		const double raw = r * interp_2d(theta, c_raw_theta_x, c_raw_theta_z, _countof(c_raw_theta_x)) * c_gain_raw);
-		SmartDashboard::PutNumber("culver-raw", raw);
+//		SmartDashboard::PutNumber("culver-raw", raw);
 
-		#if 1	//alternate raw
+		#if 1
 			left += raw;
 			right -= raw;
 		#else
@@ -184,12 +189,14 @@ void COREDrive::CulverDrive(float throttle, float steer_x, float steer_y, bool q
 		const double radius = r * theta * c_half_pi_reciprocal * radius_filter
 				* gain_radius * throttle;
 		
-		SmartDashboard::PutNumber("culver-radius", radius);
+//		SmartDashboard::PutNumber("culver-radius", radius);
 		
 		left += radius;
 		right -= radius;
 	}
 
 	//clamp value range to +-1
+//	SmartDashboard::PutNumber("c-left", left);
+//	SmartDashboard::PutNumber("c-right", right);
 	SetLeftRightMotorOutputs(left, right);
 }
