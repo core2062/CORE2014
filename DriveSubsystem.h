@@ -20,8 +20,8 @@ class DriveSubsystem : public CORESubsystem {
 	Encoder leftEncoder;
 	
 	COREDrive drive;
-	//pneumatics go here
-	
+	DoubleSolenoid rightShift;
+	DoubleSolenoid leftShift;
 	bool quickturn;
 	bool quickturn_old;
 	
@@ -33,7 +33,7 @@ public:
 	
 	DriveSubsystem(CORERobot& robot):
 		CORESubsystem(robot),
-		//1 is just a placeholder for motor ports
+		
 		leftFront(1),
 		leftBack(3),
 		rightFront(2),
@@ -46,6 +46,9 @@ public:
 		leftEncoder(3,4),
 		
 		drive(leftDrive, rightDrive),
+		
+		rightShift(1,2),
+		leftShift(3,4),
 		
 		driveChooser()
 		

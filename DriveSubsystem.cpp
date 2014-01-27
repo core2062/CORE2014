@@ -1,7 +1,7 @@
 #include "DriveSubsystem.h"
 
 void DriveSubsystem::robotInit(void){
-//	robot.requirePneumatics();
+	robot.requirePneumatics();
 }
 void DriveSubsystem::teleopInit(void){
 	robot.compressor->Start();
@@ -72,5 +72,16 @@ void DriveSubsystem::teleop(void){
 	} else {
 		drive.EtherArcade(deadband(robot.joystick.axis("mag")), deadband(robot.joystick.axis("kaj-rot")), 
 			SmartDashboard::GetNumber("ether-b"), SmartDashboard::GetNumber("ether-a"));
+	}
+	
+	if (robot.joystick.button("shift")){
+		DoubleSolenoid::Value v = rightShift.Get();
+		if (v == DoubleSolenoid::kForward ){
+			rightShift.Set(DoubleSolenoid::kReverse);
+			leftShift.Set(DoubleSolenoid::kReverse);
+		} else {
+			rightShift.Set(DoubleSolenoid::kForward);
+			leftShift.Set(DoubleSolenoid::kForward);
+		}
 	}
 }
