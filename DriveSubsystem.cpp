@@ -2,6 +2,12 @@
 
 void DriveSubsystem::robotInit(void){
 	robot.requirePneumatics();
+
+	SmartDashboard::PutNumber("ether-a", 0);
+	SmartDashboard::PutNumber("ether-b", 1);
+	
+	SmartDashboard::PutNumber("culver-radius-gain", 1.2);
+	SmartDashboard::PutNumber("culver-raw-gain", 1.5);
 }
 void DriveSubsystem::teleopInit(void){
 	robot.compressor->Start();
@@ -12,15 +18,9 @@ void DriveSubsystem::teleopInit(void){
 	robot.joystick.register_axis("steer-y", 1, 5);
 	robot.joystick.register_axis("left", 1, 2);
 	robot.joystick.register_axis("right", 1, 5);
-	robot.joystick.register_button("quickturn", 1, 5);
+	robot.joystick.register_button("quickturn", 1, 5, JoystickCache::RISING);
 	robot.joystick.register_axis("quickturn", 1, 3);
-	robot.joystick.register_button("shift", 1, 6);
-	
-	SmartDashboard::PutNumber("ether-a", .75);
-	SmartDashboard::PutNumber("ether-b", .4);
-	
-	SmartDashboard::PutNumber("culver-radius-gain", 1.2);
-	SmartDashboard::PutNumber("culver-raw-gain", 1.5);
+	robot.joystick.register_button("shift", 1, 6, JoystickCache::RISING);
 	
 //	SmartDashboard::PutNumber("culver-x", 0);
 //	SmartDashboard::PutNumber("culver-y", 0);
@@ -49,10 +49,9 @@ float deadband(float n){
 
 void DriveSubsystem::teleop(void){
 	
-	if(robot.joystick.button("quickturn") & !quickturn_old){
+	if(robot.joystick.button("quickturn")){
 		quickturn = !quickturn;
 	}
-	quickturn_old = robot.joystick.button("quickturn");
 	if(robot.joystick.axis("quickturn") > .75) { 
 		quickturn = true;
 	} else if (robot.joystick.axis("quickturn") < .1){

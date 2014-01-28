@@ -23,7 +23,6 @@ class DriveSubsystem : public CORESubsystem {
 	DoubleSolenoid rightShift;
 	DoubleSolenoid leftShift;
 	bool quickturn;
-	bool quickturn_old;
 	
 	SendableChooser driveChooser;
 public:
@@ -50,11 +49,11 @@ public:
 		rightShift(1,2),
 		leftShift(3,4),
 		
+		quickturn(false),
+		
 		driveChooser()
 		
 	{
-		quickturn = false;
-		quickturn_old = false;
 	}
 	
 	void robotInit(void);
