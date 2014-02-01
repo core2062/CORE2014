@@ -10,6 +10,7 @@ void DriveSubsystem::robotInit(void){
 	SmartDashboard::PutNumber("culver-raw-gain", 1.5);
 }
 void DriveSubsystem::teleopInit(void){
+	drive.SetSafetyEnabled(false);
 	robot.compressor->Start();
 	
 	robot.joystick.register_axis("mag", 1, 2);
@@ -83,4 +84,17 @@ void DriveSubsystem::teleop(void){
 			leftShift.Set(DoubleSolenoid::kForward);
 		}
 	}
+}
+
+void DriveSubsystem::resetDistance(void){
+	rightEncoder.Reset();
+	leftEncoder.Reset();
+}
+
+void DriveSubsystem::arcade_drive(float mag, float turn){
+	drive.ArcadeDrive(mag, turn, false);
+}
+
+double DriveSubsystem::getDistance(void){
+	return (rightEncoder.Get()+leftEncoder.Get()) / 2.0;
 }

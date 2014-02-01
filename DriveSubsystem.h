@@ -3,7 +3,7 @@
 
 #include "CORERobot/CORERobot.h"
 #include "WPILib.h"
-
+#include <cmath>
 using namespace CORE;
 
 
@@ -59,6 +59,35 @@ public:
 	void robotInit(void);
 	void teleopInit(void);
 	void teleop(void);
+	
+	void resetDistance(void);
+	void arcade_drive (float mag, float turn);
+	double getDistance(void);
+};
+class DriveAction : public Action{
+	DriveSubsystem* drive;
+	float speed;
+	double distance;
+public:
+	DriveAction(DriveSubsystem& drive, float speed, double distance):
+		drive(&drive),
+		speed(speed),
+		distance(distance)
+	{	}
+	
+	void init(void){
+		drive->resetDistance();
+	}
+	
+	ControlFlow call(void){
+		if (std::abs(drive->getDistance()) < distance){
+			drive->arcade_drive(speed, 0);
+			return CONTINUE;
+		} else {
+			drive->arcade_drive(0, 0);
+			return END;
+		}
+	}
 	
 };
 
