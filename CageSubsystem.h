@@ -10,7 +10,6 @@ class CageSubsystem : public CORESubsystem {
 	DoubleSolenoid rightWing;
 	DoubleSolenoid leftWing;
 	
-	int oldValue;
 	bool isOut;
 public:
 	
@@ -23,7 +22,6 @@ public:
 		rightWing(1,2),
 		leftWing(3,4)
 	{
-		oldValue = 0;
 		isOut = false;
 	}
 	

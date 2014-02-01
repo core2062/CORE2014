@@ -5,10 +5,10 @@ void CageSubsystem::robotInit(void){
 }
 void CageSubsystem::teleopInit(void){
 	robot.compressor->Start();
-	robot.joystick.register_button("toggle", 2 ,12);
+	robot.joystick.register_button("toggle", 2 ,12, JoystickCache::RISING);
 }
 void CageSubsystem::teleop(void){
-	 if (robot.joystick.button("toggle") && !oldValue){
+	 if (robot.joystick.button("toggle")){
 		 if (isOut){
 			 leftWing.Set(DoubleSolenoid::kReverse);
 			 rightWing.Set(DoubleSolenoid::kReverse);
@@ -19,6 +19,6 @@ void CageSubsystem::teleop(void){
 			 isOut = true;
 		 }
 	 }
-	 oldValue = robot.joystick.button("toggle");
+
 }
 	
