@@ -25,7 +25,8 @@ class Action{
 		};
 		Action();
 		virtual ControlFlow call(void){cout << "action base class operator"<< endl; return END;} // =0
-		virtual ~Action(){};
+		virtual void init(void){}
+		virtual ~Action(){}
 	};
 
 	/*

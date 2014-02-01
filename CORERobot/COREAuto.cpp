@@ -54,10 +54,12 @@ void AutoSequencer::iter(void){
 //		cout<<"in background"<<endl;
 		background.push_back(a);
 		aqueue.pop();
+		aqueue.front()->init();
 		break;
 	case Action::END:
 //		cout<<"in end"<<endl;
 		aqueue.pop();
+		aqueue.front()->init();
 		break;
 	}
 //	cout<<"before backgrond loop"<<endl;
