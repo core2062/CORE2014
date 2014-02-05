@@ -14,7 +14,7 @@ PixelValue pixVal(unsigned int r, unsigned int g, unsigned int b, unsigned int a
 #define chk(input) {if(!(input)) {goto error;}}
 #define log(im) {cout<<"writing "<<step<<endl; im.Write(("/."+step+".jpg").c_str());}
 	
-	void visionMain(){
+	void CORE::visionMain(){
 		cout << "starting autonomous" << endl;
 		AxisCamera& camera = AxisCamera::GetInstance("10.20.62.11");
 		camera.WriteBrightness(10);
@@ -44,7 +44,7 @@ PixelValue pixVal(unsigned int r, unsigned int g, unsigned int b, unsigned int a
 		delete reports;
 		AxisCamera::DeleteInstance();
 	}
-	void TestSubtraction()
+	void CORE::TestSubtraction()
 	{
 		ColorImage image (IMAQ_IMAGE_RGB);
 		ColorImage output (IMAQ_IMAGE_RGB);
