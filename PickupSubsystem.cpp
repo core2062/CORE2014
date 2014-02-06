@@ -2,7 +2,7 @@
 
 void PickupSubsystem::robotInit(void){
 	robot.requirePneumatics();
-	SmartDashboard::PutNumber("pickup-speed", .75);
+//	SmartDashboard::PutNumber("pickup-speed", .75);
 	SmartDashboard::PutNumber("roller-speed", .75);
 	
 }
@@ -16,7 +16,7 @@ void PickupSubsystem::teleopInit(void){
 
 }
 void PickupSubsystem::teleop(void){
-	double pickup_speed = SmartDashboard::GetNumber("pickup-speed");
+	double pickup_speed = 1; //SmartDashboard::GetNumber("pickup-speed");
 	double roller_speed = SmartDashboard::GetNumber("roller-speed");
 	double pickup_output = 0;
 	double roller_output = roller_motor.Get();

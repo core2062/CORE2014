@@ -98,3 +98,6 @@ void DriveSubsystem::arcade_drive(float mag, float turn){
 double DriveSubsystem::getDistance(void){
 	return (rightEncoder.Get()+leftEncoder.Get()) / 2.0;
 }
+double DriveSubsystem::getLeftEnc(void){
+	return leftEncoder.Get();
+}

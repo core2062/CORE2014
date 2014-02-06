@@ -63,6 +63,7 @@ public:
 	void resetDistance(void);
 	void arcade_drive (float mag, float turn);
 	double getDistance(void);
+	double getLeftEnc(void);
 };
 class DriveAction : public Action{
 	DriveSubsystem* drive;
@@ -82,6 +83,35 @@ public:
 	ControlFlow call(void){
 		if (std::abs(drive->getDistance()) < distance){
 			drive->arcade_drive(speed, 0);
+			return CONTINUE;
+		} else {
+			drive->arcade_drive(0, 0);
+			return END;
+		}
+	}
+	
+};
+class TurnAction : public Action{
+	DriveSubsystem* drive;
+	float speed;
+	double ticks;
+	//ticks is the amout of ticks from the encoder before it stops turning
+	//int dir;
+	//dir is direction
+public:
+	TurnAction(DriveSubsystem& drive, float speed, double ticks):
+		drive(&drive),
+		speed(speed),
+		ticks(ticks)
+	{	}
+	
+	void init(void){
+		drive->resetDistance();
+	}
+	
+	ControlFlow call(void){
+		if (std::abs(drive->getDistance()) < ticks){
+			drive->arcade_drive(0, speed);
 			return CONTINUE;
 		} else {
 			drive->arcade_drive(0, 0);
