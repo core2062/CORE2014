@@ -20,7 +20,7 @@ public:
 	}	
 	ShooterSubsystem(CORERobot& robot):
 		CORESubsystem(robot),
-		shooterWheel(10),
+		shooterWheel(6),
 		limitSwitch(8),
 		shootTimer()
 	{

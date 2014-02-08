@@ -46,8 +46,8 @@ public:
 		
 		drive(leftDrive, rightDrive),
 		
-		rightShift(1,2),
-		leftShift(3,4),
+		rightShift(1,5,6),
+		leftShift(2,1,2),
 		
 		quickturn(false),
 		

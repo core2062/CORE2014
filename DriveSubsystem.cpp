@@ -3,8 +3,8 @@
 void DriveSubsystem::robotInit(void){
 	robot.requirePneumatics();
 
-	SmartDashboard::PutNumber("ether-a", 0);
-	SmartDashboard::PutNumber("ether-b", 1);
+	SmartDashboard::PutNumber("ether-a", 1);
+	SmartDashboard::PutNumber("ether-b", 0);
 	
 	SmartDashboard::PutNumber("culver-radius-gain", 1.2);
 	SmartDashboard::PutNumber("culver-raw-gain", 1.5);
