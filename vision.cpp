@@ -15,6 +15,11 @@ PixelValue pixVal(unsigned int r, unsigned int g, unsigned int b, unsigned int a
 #define log(im) {cout<<"writing "<<step<<endl; (im).Write(("/."+step+".bmp").c_str());}
 	
 	void CORE::visionMain(){
+		double minArea = 8.0;
+		double minThreshold = 2;
+		bool hot = false;
+		bool isHoriz = false;
+		bool isVertical = false;
 		cout << "starting autonomous" << endl;
 		AxisCamera& camera = AxisCamera::GetInstance("10.20.62.11");
 		camera.WriteBrightness(10);
@@ -27,6 +32,7 @@ PixelValue pixVal(unsigned int r, unsigned int g, unsigned int b, unsigned int a
 		
 		step = "thresh";
 		BinaryImage* thresholdImage = image->ThresholdRGB(0, 22, 28, 195, 0, 71);
+//		BinaryImage* thresholdImage = image->ThresholdRGB(0,224,217,255,140,255);
 		log(*thresholdImage);
 		
 		step = "small";
@@ -37,6 +43,20 @@ PixelValue pixVal(unsigned int r, unsigned int g, unsigned int b, unsigned int a
 		vector<ParticleAnalysisReport>::const_iterator i;
 		for(i = reports->begin(); i!=reports->end(); i++){
 			cout<< i->boundingRect.top <<" "<< i->boundingRect.left << endl;
+			if (i->particleArea > minArea){
+				cout << "passes area" << endl;
+				if ((i->boundingRect.width / i->boundingRect.height)> minThreshold){
+					isHoriz = true;
+					cout<< "horizontal seen"<<endl;
+				} else if((i->boundingRect.height / i->boundingRect.width)>minThreshold){
+					isVertical =true;
+					cout<< "Vertical seen"<<endl;
+				}
+				if (isVertical && isHoriz){
+					hot = true;
+					cout<< "hot " << hot <<endl;
+				}
+			}
 		}
 		
 		delete image;

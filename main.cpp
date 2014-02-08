@@ -9,24 +9,25 @@ using namespace CORE;
 class CORE2014 : public SimpleRobot {
 	
 	CORERobot robot;
+	
 
 	DriveSubsystem drive;
 //	CageSubsystem cage;
-	ShooterSubsystem shooter;
+//	ShooterSubsystem shooter;
 //	PickupSubsystem pickup;
 	
-	AutoSequencer sequencer;
+	AutoSequencer autoSeq;
 public:
 	CORE2014():
 		robot(),
-		drive(robot),
+		drive(robot)
 //		cage(robot),
-		shooter(robot),
+//		shooter(robot),
 //		pickup(robot),
-		sequencer()
+//		autoSeq()
 	{
 		robot.add(drive);
-		robot.add(shooter); 
+//		robot.add(shooter); 
 //		robot.add(pickup);
 //		robot.add(cage);
 	}
@@ -39,13 +40,13 @@ public:
 	}
 	void Autonomous(){
 		visionMain();
-		
+//		autoSec = AutoSequencer();
+		// load shooter (Background)
 		// drive forward
-		//DriveAction drive_action (drive, .7, SmartDashboard::GetNumber("drive-distance"));
 		// hot detection
-		// turn (dependant on hot or not)
-		// windup and shoot
-		//FireShot fire_shot (shooter);
+		// DriveAction drive_action (drive, .7, SmartDashboard::GetNumber("drive-distance"));
+		// FireShot fire_shot (shooter);
+		// Windup(shooter);   //?
 	}
 
 
@@ -66,6 +67,8 @@ public:
 	 * Runs during test mode
 	 */
 	void Test() {
+		robot.requirePneumatics();
+		robot.compressor->Enabled();
 		
 	}
 };
