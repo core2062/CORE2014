@@ -48,7 +48,7 @@ public:
 	ControlFlow call(void){
 		if(!shooter->getSwitch()){
 			shooter->setMotor(1);
-			return CONTINUE;
+			return BACKGROUND;
 		} else {
 			shooter->setMotor(0);
 			return END;

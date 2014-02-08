@@ -13,7 +13,7 @@ class CORE2014 : public SimpleRobot {
 
 	DriveSubsystem drive;
 //	CageSubsystem cage;
-//	ShooterSubsystem shooter;
+	ShooterSubsystem shooter;
 //	PickupSubsystem pickup;
 	
 	AutoSequencer autoSeq;
@@ -27,7 +27,7 @@ public:
 //		autoSeq()
 	{
 		robot.add(drive);
-//		robot.add(shooter); 
+		robot.add(shooter); 
 //		robot.add(pickup);
 //		robot.add(cage);
 	}
@@ -35,18 +35,20 @@ public:
 	void RobotInit(){
 		robot.robotInit();
 		SmartDashboard::PutNumber("drive-distance", 15);
+		SmartDashboard::PutNumber("drive-speed", .7);
 		SmartDashboard::PutBoolean("is-right", false);
 	
 	}
 	void Autonomous(){
 		visionMain();
-//		autoSec = AutoSequencer();
-		// load shooter (Background)
-		// drive forward
+		autoSeq = AutoSequencer();
+		Windup wind_action(shooter);
+		autoSeq.add_action(wind_action);
+		DriveAction drive_action(drive, SmartDashboard::GetNumber("drive-speed"), SmartDashboard::GetNumber("drive-distance"));
+		autoSeq.add_action(drive_action);
 		// hot detection
-		// DriveAction drive_action (drive, .7, SmartDashboard::GetNumber("drive-distance"));
-		// FireShot fire_shot (shooter);
-		// Windup(shooter);   //?
+		FireShot fire_shot(shooter);
+		autoSeq.add_action(fire_shot);
 	}
 
 
