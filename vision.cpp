@@ -12,7 +12,7 @@ PixelValue pixVal(unsigned int r, unsigned int g, unsigned int b, unsigned int a
 	}
 	
 #define chk(input) {if(!(input)) {goto error;}}
-#define log(im) {cout<<"writing "<<step<<endl; (im).Write(("/."+step+".jpg").c_str());}
+#define log(im) {cout<<"writing "<<step<<endl; (im).Write(("/."+step+".bmp").c_str());}
 	
 	void CORE::visionMain(){
 		cout << "starting autonomous" << endl;
@@ -26,7 +26,7 @@ PixelValue pixVal(unsigned int r, unsigned int g, unsigned int b, unsigned int a
 		log(*image);
 		
 		step = "thresh";
-		BinaryImage* thresholdImage = image->ThresholdRGB(0, 23, 22, 50, 0, 43);
+		BinaryImage* thresholdImage = image->ThresholdRGB(0, 22, 28, 195, 0, 71);
 		log(*thresholdImage);
 		
 		step = "small";
@@ -43,6 +43,10 @@ PixelValue pixVal(unsigned int r, unsigned int g, unsigned int b, unsigned int a
 		delete thresholdImage;
 		delete small;
 		delete reports;
+		camera.WriteBrightness(50);
+		while(!camera.IsFreshImage()){
+			// pass
+		}
 		AxisCamera::DeleteInstance();
 	}
 	void CORE::TestSubtraction()

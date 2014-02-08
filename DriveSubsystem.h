@@ -54,6 +54,7 @@ public:
 		driveChooser()
 		
 	{
+		drive.SetSafetyEnabled(false);
 	}
 	
 	void robotInit(void);

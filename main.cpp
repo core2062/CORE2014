@@ -38,29 +38,27 @@ public:
 	
 	}
 	void Autonomous(){
-		//visionMain();
+		visionMain();
 		
 		// drive forward
-		DriveAction drive_action (drive, .7, SmartDashboard::GetNumber("drive-distance"));
+		//DriveAction drive_action (drive, .7, SmartDashboard::GetNumber("drive-distance"));
 		// hot detection
 		// turn (dependant on hot or not)
 		// windup and shoot
-		FireShot fire_shot (shooter);
+		//FireShot fire_shot (shooter);
 	}
 
 
-	void OperatorControl()
-	{
+	void OperatorControl(){
 		robot.teleopInit();
 		Watchdog& wd = GetWatchdog();
-		wd.SetEnabled(true);
 		wd.SetExpiration(.5);
-		while (IsOperatorControl() && !IsDisabled())
-		{
+		wd.SetEnabled(true);
+		while (IsOperatorControl() && !IsDisabled()){
+			wd.Feed();
 			SmartDashboard::PutBoolean("compressor-running", robot.compressor->GetPressureSwitchValue());
 			robot.teleop();
 			Wait(0.005);				// wait for a motor update time
-			wd.Feed();
 		}
 	}
 	
