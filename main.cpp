@@ -14,21 +14,21 @@ class CORE2014 : public SimpleRobot {
 	DriveSubsystem drive;
 //	CageSubsystem cage;
 	ShooterSubsystem shooter;
-//	PickupSubsystem pickup;
+	PickupSubsystem pickup;
 	
 	AutoSequencer autoSeq;
 public:
 	CORE2014():
 		robot(),
-		drive(robot)
+		drive(robot),
 //		cage(robot),
-//		shooter(robot),
-//		pickup(robot),
-//		autoSeq()
+		shooter(robot),
+		pickup(robot),
+		autoSeq()
 	{
 		robot.add(drive);
 		robot.add(shooter); 
-//		robot.add(pickup);
+		robot.add(pickup);
 //		robot.add(cage);
 	}
 
@@ -40,15 +40,16 @@ public:
 	
 	}
 	void Autonomous(){
-		visionMain();
-		autoSeq = AutoSequencer();
-		Windup wind_action(shooter);
-		autoSeq.add_action(wind_action);
-		DriveAction drive_action(drive, SmartDashboard::GetNumber("drive-speed"), SmartDashboard::GetNumber("drive-distance"));
+//		visionMain();
+//		Windup wind_action(shooter);
+//		autoSeq.add_action(wind_action);
+		DriveAction drive_action(drive, SmartDashboard::GetNumber("drive-speed"),
+				SmartDashboard::GetNumber("drive-distance"));
 		autoSeq.add_action(drive_action);
-		// hot detection
-		FireShot fire_shot(shooter);
-		autoSeq.add_action(fire_shot);
+		HotAction hot;
+		autoSeq.add_action(hot);
+//		FireShot fire_shot(shooter);
+//		autoSeq.add_action(fire_shot);
 	}
 
 

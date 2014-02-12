@@ -14,7 +14,7 @@ PixelValue pixVal(unsigned int r, unsigned int g, unsigned int b, unsigned int a
 #define chk(input) {if(!(input)) {goto error;}}
 #define log(im) {cout<<"writing "<<step<<endl; (im).Write(("/."+step+".bmp").c_str());}
 	
-	void CORE::visionMain(){
+	bool CORE::visionMain(){
 		double minArea = 8.0;
 		double minThreshold = 2;
 		bool hot = false;
@@ -68,6 +68,7 @@ PixelValue pixVal(unsigned int r, unsigned int g, unsigned int b, unsigned int a
 			// pass
 		}
 		AxisCamera::DeleteInstance();
+		return hot;
 	}
 	void CORE::TestSubtraction()
 	{
