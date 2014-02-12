@@ -27,7 +27,7 @@ public:
 		autoSeq()
 	{
 		robot.add(drive);
-		robot.add(shooter); 
+		robot.add(shooter);
 		robot.add(pickup);
 //		robot.add(cage);
 	}
@@ -43,6 +43,7 @@ public:
 //		visionMain();
 //		Windup wind_action(shooter);
 //		autoSeq.add_action(wind_action);
+//		Move pickup down so we can shoot
 		DriveAction drive_action(drive, SmartDashboard::GetNumber("drive-speed"),
 				SmartDashboard::GetNumber("drive-distance"));
 		autoSeq.add_action(drive_action);
@@ -50,6 +51,7 @@ public:
 		autoSeq.add_action(hot);
 //		FireShot fire_shot(shooter);
 //		autoSeq.add_action(fire_shot);
+
 	}
 
 
