@@ -86,18 +86,7 @@ void DriveSubsystem::teleop(void){
 	}
 }
 
-void DriveSubsystem::resetDistance(void){
-	rightEncoder.Reset();
-	leftEncoder.Reset();
-}
-
 void DriveSubsystem::arcade_drive(float mag, float turn){
 	drive.ArcadeDrive(mag, turn, false);
 }
 
-double DriveSubsystem::getDistance(void){
-	return (rightEncoder.Get()+leftEncoder.Get()) / 2.0;
-}
-double DriveSubsystem::getLeftEnc(void){
-	return leftEncoder.Get();
-}

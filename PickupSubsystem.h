@@ -18,7 +18,7 @@ public:
 	
 	PickupSubsystem(CORERobot& robot):
 		CORESubsystem(robot),
-		roller_motor(5),
+		roller_motor(22), //not being tested
 		pickup_solenoid_left(1,3,4), //module 2 removed for testing,
 		pickup_solenoid_right(2,3,4)
 	{

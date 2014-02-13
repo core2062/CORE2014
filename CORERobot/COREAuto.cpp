@@ -25,6 +25,11 @@ AutoSequencer::AutoSequencer():
 	background(){
 }
 
+void AutoSequencer::clear(void){
+	aqueue.empty();
+	background.empty();
+}
+
 void AutoSequencer::add_action(Action& action){
 	add_action(&action);
 }

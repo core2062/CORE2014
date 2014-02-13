@@ -49,6 +49,7 @@ class AutoSequencer{
 	std::vector<Action*> background;
 public:
 	AutoSequencer(void);
+	void clear(void);
 	void add_action(Action& action);
 	void add_action(Action* action);
 	void iter(void);

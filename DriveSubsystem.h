@@ -8,16 +8,16 @@ using namespace CORE;
 
 
 class DriveSubsystem : public CORESubsystem {
-	Victor leftFront;
-	Victor leftBack;
-	Victor rightFront;
-	Victor rightBack;
+	Jaguar leftFront;
+	Jaguar leftBack;
+	Jaguar rightFront;
+	Jaguar rightBack;
 	
 	DoubleSpeed rightDrive;
 	DoubleSpeed leftDrive;
 	
-	Encoder rightEncoder;
-	Encoder leftEncoder;
+//	Encoder rightEncoder;
+//	Encoder leftEncoder;
 	
 	COREDrive drive;
 	DoubleSolenoid rightShift;
@@ -33,16 +33,16 @@ public:
 	DriveSubsystem(CORERobot& robot):
 		CORESubsystem(robot),
 		
-		leftFront(1),
-		leftBack(3),
-		rightFront(2),
-		rightBack(4),
+		leftFront(3),
+		leftBack(4),
+		rightFront(5),
+		rightBack(6),
 		
 		rightDrive(leftFront, leftBack),
 		leftDrive(rightFront, rightBack),
 		
-		rightEncoder(1,2),
-		leftEncoder(3,4),
+//		rightEncoder(1,2),
+//		leftEncoder(3,4),
 		
 		drive(leftDrive, rightDrive),
 		
@@ -66,23 +66,22 @@ public:
 	double getDistance(void);
 	double getLeftEnc(void);
 };
-class DriveAction : public Action{
+class DriveAction : public WaitAction{
 	DriveSubsystem* drive;
 	float speed;
-	double distance;
 public:
-	DriveAction(DriveSubsystem& drive, float speed, double distance):
+	DriveAction(DriveSubsystem& drive, float speed, double duration):
+		WaitAction(duration),
 		drive(&drive),
-		speed(speed),
-		distance(distance)
+		speed(speed)
 	{	}
 	
 	void init(void){
-		drive->resetDistance();
 	}
 	
 	ControlFlow call(void){
-		if (std::abs(drive->getDistance()) < distance){
+		ControlFlow flow = WaitAction::call();
+		if (flow == CONTINUE){
 			drive->arcade_drive(speed, 0);
 			return CONTINUE;
 		} else {
