@@ -19,8 +19,8 @@ public:
 	
 	CageSubsystem(CORERobot& robot):
 		CORESubsystem(robot),
-		rightWing(1,2),
-		leftWing(3,4)
+		rightWing(2,5,6),
+		leftWing(1,1,2)
 	{
 		isOut = false;
 	}

@@ -10,7 +10,7 @@ class CORE2014: public SimpleRobot {
 	CORERobot robot;
 
 	DriveSubsystem drive;
-	//	CageSubsystem cage;
+	CageSubsystem cage;
 	ShooterSubsystem shooter;
 	PickupSubsystem pickup;
 
@@ -18,12 +18,12 @@ class CORE2014: public SimpleRobot {
 public:
 	CORE2014() :
 		robot(), drive(robot),
-		//		cage(robot),
+				cage(robot),
 				shooter(robot), pickup(robot), autoSeq() {
 		robot.add(drive);
 		robot.add(shooter);
 		robot.add(pickup);
-		//		robot.add(cage);
+		robot.add(cage);
 	}
 
 	void RobotInit() {

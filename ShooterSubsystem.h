@@ -7,7 +7,7 @@
 using namespace CORE;
 
 class SensorEdge {
-	AnalogChannel	sensor;
+	DigitalInput	sensor;
 	bool		oldRState;
 	bool		oldFState;
 	
@@ -19,7 +19,8 @@ public:
 		oldFState = true;
 	}
 	bool Get(){
-		return( sensor.GetVoltage() < 3.5 );
+//		return( sensor.GetVoltage() < 3.5 );
+		return sensor.Get();
 	}
 	bool Rise(){
 		bool state = Get();
@@ -33,9 +34,9 @@ public:
 		oldFState = state;
 		return fall;
 	}
-	float GetVoltage(){
-		return sensor.GetVoltage();
-	}
+//	float GetVoltage(){
+//		return sensor.GetVoltage();
+//	}
 };
 
 class ShooterSubsystem : public CORESubsystem {
@@ -54,7 +55,7 @@ public:
 	ShooterSubsystem(CORERobot& robot):
 		CORESubsystem(robot),
 		shooterWheel(6),
-		photo(8),
+		photo(2),
 		shootTimer(),
 		armed(false),
 		autoArmed(false)
