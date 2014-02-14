@@ -47,4 +47,7 @@ void PickupSubsystem::teleop(void){
 	}
 	roller_motor.Set(roller_output);
 }
-	
+void PickupSubsystem::goOut(void){
+	pickup_solenoid_left.Set(DoubleSolenoid::kForward);
+	pickup_solenoid_right.Set(DoubleSolenoid::kForward);
+}	

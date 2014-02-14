@@ -28,6 +28,22 @@ public:
 	void robotInit(void);
 	void teleopInit(void);
 	void teleop(void);
+	void goOut(void);
+};
+
+class PickupOut : public Action{
+	PickupSubsystem* pickup;
+public:
+	PickupOut(PickupSubsystem& pickup):
+	pickup(&pickup){
+
+	}
+	void init(void){}
+	ControlFlow call(void){
+		pickup->goOut();
+		return END; 
+		}
+	
 };
 
 #endif
