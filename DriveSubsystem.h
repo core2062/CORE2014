@@ -16,8 +16,8 @@ class DriveSubsystem : public CORESubsystem {
 	DoubleSpeed rightDrive;
 	DoubleSpeed leftDrive;
 	
-	Encoder rightEncoder;
-	Encoder leftEncoder;
+//	Encoder rightEncoder;
+//	Encoder leftEncoder;
 	
 	COREDrive drive;
 	DoubleSolenoid rightShift;
@@ -41,8 +41,8 @@ public:
 		rightDrive(leftFront, leftBack),
 		leftDrive(rightFront, rightBack),
 		
-		rightEncoder(1,2),
-		leftEncoder(3,4),
+//		rightEncoder(1,2),
+//		leftEncoder(3,4),
 		
 		drive(leftDrive, rightDrive),
 		
@@ -66,23 +66,22 @@ public:
 	double getDistance(void);
 	double getLeftEnc(void);
 };
-class DriveAction : public Action{
+class DriveAction : public WaitAction{
 	DriveSubsystem* drive;
 	float speed;
-	double distance;
 public:
-	DriveAction(DriveSubsystem& drive, float speed, double distance):
+	DriveAction(DriveSubsystem& drive, float speed, double duration):
+		WaitAction(duration),
 		drive(&drive),
-		speed(speed),
-		distance(distance)
+		speed(speed)
 	{	}
 	
 	void init(void){
-		drive->resetDistance();
 	}
 	
 	ControlFlow call(void){
-		if (std::abs(drive->getDistance()) < distance){
+		ControlFlow flow = WaitAction::call();
+		if (flow == CONTINUE){
 			drive->arcade_drive(speed, 0);
 			return CONTINUE;
 		} else {

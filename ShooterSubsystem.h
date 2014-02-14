@@ -6,13 +6,46 @@
 
 using namespace CORE;
 
+class SensorEdge {
+	AnalogChannel	sensor;
+	bool		oldRState;
+	bool		oldFState;
+	
+public:
+	SensorEdge(uint32_t chan):
+		sensor(chan)
+	{
+		oldRState = false;
+		oldFState = true;
+	}
+	bool Get(){
+		return( sensor.GetVoltage() < 3.5 );
+	}
+	bool Rise(){
+		bool state = Get();
+		bool rise = state and !oldRState;
+		oldRState = state;
+		return rise;
+	}
+	bool Fall(){
+		bool state = Get();
+		bool fall = !state and oldFState;
+		oldFState = state;
+		return fall;
+	}
+	float GetVoltage(){
+		return sensor.GetVoltage();
+	}
+};
+
 class ShooterSubsystem : public CORESubsystem {
 	
-	Victor shooterWheel;
-	DigitalInput limitSwitch;
+	Jaguar shooterWheel;
+	SensorEdge photo;
 	Timer shootTimer;
 	
 	bool armed;
+	bool autoArmed;
 	
 public:
 	std::string name(void){
@@ -21,20 +54,21 @@ public:
 	ShooterSubsystem(CORERobot& robot):
 		CORESubsystem(robot),
 		shooterWheel(6),
-		limitSwitch(8),
-		shootTimer()
+		photo(8),
+		shootTimer(),
+		armed(false),
+		autoArmed(false)
 	{
-		armed = false;
 	}
 	
 	void robotInit(void);
 	void teleopInit(void);
 	void teleop(void);
+	
 	bool getSwitch(void);
 	void setMotor(double speed);
-	void StartTimer(void);
-	bool WaitForTimer(void);
-	void StopTimer(void);
+	bool aArmed(void);
+	void setAArmed(bool value);
 };
 
 class Windup : public Action{
@@ -42,45 +76,46 @@ class Windup : public Action{
 public:
 	Windup(ShooterSubsystem& shooter):
 	shooter(&shooter){
-
+		shooter.setAArmed(false);
 	}
 	void init(void){}
 	ControlFlow call(void){
 		if(!shooter->getSwitch()){
-			shooter->setMotor(1);
+			shooter->setMotor(SmartDashboard::GetNumber("choochoo-speed"));
 			return BACKGROUND;
 		} else {
 			shooter->setMotor(0);
+			shooter->setAArmed(true);
 			return END;
 		}
 	}
 };
 class FireShot : public Action{
 	ShooterSubsystem* shooter;
-	bool isArmed;
+	Timer timer;
 public:
 	FireShot(ShooterSubsystem& shooter):
 	shooter(&shooter),
-	isArmed(true)
+	timer()
 	{}
-	void init(void){}
+	void init(void){
+		timer.Reset();
+		shooter->getSwitch();
+	}
 	ControlFlow call(void){
-		if (isArmed){
-			shooter->setMotor(1);
-			isArmed = false;
+		if(!shooter->aArmed()){
 			return CONTINUE;
-		} else {
-			shooter->StartTimer();
-			if (shooter->WaitForTimer()){
-				shooter->setMotor(0);
-				shooter->StopTimer();
-				return END;
-			} else {
-				return CONTINUE;
-			}
 		}
-		shooter->setMotor(1);
-		
+		if (timer.Get() >= SmartDashboard::GetNumber("shoot-delay")){
+			timer.Stop();
+			shooter->setMotor(0);
+			return END;
+		}
+		if(timer.Get() == 0){
+			timer.Start();
+		}
+		shooter->setMotor(SmartDashboard::GetNumber("choochoo-speed"));
+		return CONTINUE;
 	}
 };
 

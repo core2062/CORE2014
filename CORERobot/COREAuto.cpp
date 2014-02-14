@@ -25,6 +25,11 @@ AutoSequencer::AutoSequencer():
 	background(){
 }
 
+void AutoSequencer::clear(void){
+	aqueue.empty();
+	background.empty();
+}
+
 void AutoSequencer::add_action(Action& action){
 	add_action(&action);
 }
@@ -42,31 +47,30 @@ void AutoSequencer::iter(void){
 		return;
 	}
 	Action* a = aqueue.front();
-	cout <<a<<endl;
+//	cout<<"current action: "<<a<<endl;
 	Action::ControlFlow return_val = a->call();
 	
 //	cout<<"after action"<<endl;
 	switch(return_val){
 	case Action::CONTINUE:
-//		cout<<" in countinue"<<endl;
 		break;
 	case Action::BACKGROUND:
-//		cout<<"in background"<<endl;
+		cout << "adding to background: " << a << endl;
 		background.push_back(a);
-		aqueue.pop();
-		aqueue.front()->init();
-		break;
 	case Action::END:
-//		cout<<"in end"<<endl;
 		aqueue.pop();
+		cout << "new task: " << aqueue.front() << endl;
 		aqueue.front()->init();
 		break;
 	}
-//	cout<<"before backgrond loop"<<endl;
-	for(std::vector<Action*>::iterator it = background.begin(); it != background.end(); ++it){
+	std::vector<Action*>::iterator it = background.begin();
+	while(it != background.end()){
+		cout << "  bkgrnd: " << *it << endl;
 		Action::ControlFlow return_val = (*it)->call();
 		if (return_val == Action::END){
-			background.erase(it);
+			it = background.erase(it);
+		} else {
+			++it;
 		}
 	}
 //	cout<<"after iter"<<endl;

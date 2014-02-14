@@ -2,7 +2,7 @@
 
 void ShooterSubsystem::robotInit(void){
 	SmartDashboard::PutNumber("shoot-delay", .5);
-	SmartDashboard::PutNumber("choochoo-speed", .8);
+	SmartDashboard::PutNumber("choochoo-speed", .2);
 	SmartDashboard::PutBoolean("armed", false);
 }
 void ShooterSubsystem::teleopInit(void){
@@ -11,7 +11,7 @@ void ShooterSubsystem::teleopInit(void){
 	
 }
 void ShooterSubsystem::teleop(void){
-	if (limitSwitch.Get() && !armed){
+	if (photo.Rise() && !armed){
 			armed = true;
 	}
 	double output = 0;
@@ -36,30 +36,19 @@ void ShooterSubsystem::teleop(void){
 		output = 0;
 		armed = false;
 	}
-	cout << "timer: " << shootTimer.Get() << " armed: " << armed << endl;
+//	cout << "timer: " << shootTimer.Get() << " armed: " << armed << endl;
 	SmartDashboard::PutBoolean("armed", armed);
 	shooterWheel.Set(output);
 }
 bool ShooterSubsystem::getSwitch(void){
-	return limitSwitch.Get();
+	return photo.Rise();
 }
 void ShooterSubsystem::setMotor(double speed){
 	shooterWheel.Set(speed);
 }
-void ShooterSubsystem::StartTimer(void){
-	shootTimer.Reset();
-	shootTimer.Start();
+bool ShooterSubsystem::aArmed(void){
+	return autoArmed;
 }
-bool ShooterSubsystem::WaitForTimer(void){
-	if (shootTimer.Get() >= SmartDashboard::GetNumber("shoot-delay")){
-		shootTimer.Stop();
-		shootTimer.Reset();
-		return true;
-	} else {
-		return false;
-	}
-}
-void ShooterSubsystem::StopTimer(void){
-	shootTimer.Stop();
-	shootTimer.Reset();
+void ShooterSubsystem::setAArmed(bool value){
+	autoArmed = value;
 }

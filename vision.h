@@ -17,12 +17,19 @@ namespace CORE{
 			ds = DriverStation::GetInstance();
 		}
 		void init(void){
-			hot = visionMain();
+//			hot = visionMain();
+			hot = SmartDashboard::GetBoolean("hot-debug");
+			if(hot) {
+				cout << "hot, no wait" <<endl;
+			} else {
+				cout << "not hot, waiting 5 sec." << endl;
+			}
 		}
 		virtual ControlFlow call(void){
-			if(!hot and ds->GetMatchTime() < .5 ){
+			if(!hot and ds->GetMatchTime() < 5 ){
 				return CONTINUE;
 			}
+			cout << "wait over" << endl;
 			return END;
 		}
 		virtual ~HotAction(void){};

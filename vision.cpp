@@ -20,7 +20,7 @@ PixelValue pixVal(unsigned int r, unsigned int g, unsigned int b, unsigned int a
 		bool hot = false;
 		bool isHoriz = false;
 		bool isVertical = false;
-		cout << "starting autonomous" << endl;
+		cout << "starting vision" << endl;
 		AxisCamera& camera = AxisCamera::GetInstance("10.20.62.11");
 		camera.WriteBrightness(10);
 		std::string step = "start";
@@ -32,7 +32,6 @@ PixelValue pixVal(unsigned int r, unsigned int g, unsigned int b, unsigned int a
 		
 		step = "thresh";
 		BinaryImage* thresholdImage = image->ThresholdRGB(0, 22, 28, 195, 0, 71);
-//		BinaryImage* thresholdImage = image->ThresholdRGB(0,224,217,255,140,255);
 		log(*thresholdImage);
 		
 		step = "small";
@@ -54,7 +53,6 @@ PixelValue pixVal(unsigned int r, unsigned int g, unsigned int b, unsigned int a
 				}
 				if (isVertical && isHoriz){
 					hot = true;
-					cout<< "hot " << hot <<endl;
 				}
 			}
 		}
