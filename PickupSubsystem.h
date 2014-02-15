@@ -8,8 +8,8 @@ using namespace CORE;
 
 class PickupSubsystem : public CORESubsystem {
 	Victor roller_motor;
-	DoubleSolenoid pickup_solenoid_left;
-	DoubleSolenoid pickup_solenoid_right;
+	DoubleSolenoid pickup_left;
+	DoubleSolenoid pickup_right;
 	
 public:
 	std::string name(void){
@@ -19,8 +19,8 @@ public:
 	PickupSubsystem(CORERobot& robot):
 		CORESubsystem(robot),
 		roller_motor(5),
-		pickup_solenoid_left(1,3,4), 
-		pickup_solenoid_right(2,3,4)
+		pickup_left(1,3,4), 
+		pickup_right(2,3,4)
 	{
 		
 	}
@@ -28,6 +28,7 @@ public:
 	void robotInit(void);
 	void teleopInit(void);
 	void teleop(void);
+	void cylinderOut(void);
 };
 
 #endif

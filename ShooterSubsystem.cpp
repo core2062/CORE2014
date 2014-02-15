@@ -11,7 +11,7 @@ void ShooterSubsystem::teleopInit(void){
 	
 }
 void ShooterSubsystem::teleop(void){
-	if (photo.Rise() && !armed){
+	if (photo.Rise()){
 			armed = true;
 	}
 	double output = 0;
@@ -38,6 +38,7 @@ void ShooterSubsystem::teleop(void){
 	}
 //	cout << "timer: " << shootTimer.Get() << " armed: " << armed << endl;
 	SmartDashboard::PutBoolean("armed", armed);
+	SmartDashboard::PutBoolean("sensor", photo.Get());
 	shooterWheel.Set(output);
 }
 bool ShooterSubsystem::getSwitch(void){

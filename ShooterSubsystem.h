@@ -20,7 +20,7 @@ public:
 	}
 	bool Get(){
 //		return( sensor.GetVoltage() < 3.5 );
-		return sensor.Get();
+		return !sensor.Get();
 	}
 	bool Rise(){
 		bool state = Get();
@@ -79,11 +79,13 @@ public:
 	shooter(&shooter){
 		shooter.setAArmed(false);
 	}
-	void init(void){}
+	void init(void){
+		shooter->getSwitch();
+	}
 	ControlFlow call(void){
 		if(!shooter->getSwitch()){
 			shooter->setMotor(SmartDashboard::GetNumber("choochoo-speed"));
-			return BACKGROUND;
+			return CONTINUE;
 		} else {
 			shooter->setMotor(0);
 			shooter->setAArmed(true);
@@ -101,7 +103,6 @@ public:
 	{}
 	void init(void){
 		timer.Reset();
-		shooter->getSwitch();
 	}
 	ControlFlow call(void){
 		if(!shooter->aArmed()){

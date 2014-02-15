@@ -4,7 +4,6 @@ void PickupSubsystem::robotInit(void){
 	robot.requirePneumatics();
 //	SmartDashboard::PutNumber("pickup-speed", .75);
 	SmartDashboard::PutNumber("roller-speed", .75);
-	
 }
 void PickupSubsystem::teleopInit(void){
 	robot.compressor->Start();
@@ -14,6 +13,8 @@ void PickupSubsystem::teleopInit(void){
 	robot.joystick.register_button("roller-in", 2, 9, JoystickCache::RISING);
 	robot.joystick.register_button("roller-out", 2, 10, JoystickCache::RISING);
 
+	pickup_left.Set(DoubleSolenoid::kOff);
+	pickup_right.Set(DoubleSolenoid::kOff);
 }
 void PickupSubsystem::teleop(void){
 	double roller_speed = SmartDashboard::GetNumber("roller-speed");
@@ -35,16 +36,20 @@ void PickupSubsystem::teleop(void){
 	
 	//pickup_motor.Set(pickup_output);
 	if (robot.joystick.button("pickup-out")){
-		pickup_solenoid_left.Set(DoubleSolenoid::kReverse);
-		pickup_solenoid_right.Set(DoubleSolenoid::kReverse);
+		pickup_left.Set(DoubleSolenoid::kReverse);
+		pickup_right.Set(DoubleSolenoid::kReverse);
 	}else if (robot.joystick.button("pickup-in")){
-		pickup_solenoid_left.Set(DoubleSolenoid::kForward);
-		pickup_solenoid_right.Set(DoubleSolenoid::kForward);
+		pickup_left.Set(DoubleSolenoid::kForward);
+		pickup_right.Set(DoubleSolenoid::kForward);
 	} else {
-		pickup_solenoid_left.Set(DoubleSolenoid::kOff);
-	    pickup_solenoid_right.Set(DoubleSolenoid::kOff);
+		pickup_left.Set(DoubleSolenoid::kOff);
+	    pickup_right.Set(DoubleSolenoid::kOff);
 
 	}
 	roller_motor.Set(roller_output);
+}
+void PickupSubsystem::cylinderOut(void){
+	pickup_left.Set(DoubleSolenoid::kReverse);
+	pickup_right.Set(DoubleSolenoid::kReverse);
 }
 	

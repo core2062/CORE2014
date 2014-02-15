@@ -30,6 +30,7 @@ public:
 		robot.robotInit();
 		SmartDashboard::PutNumber("drive-duration", 2.5);
 		SmartDashboard::PutNumber("drive-speed", .6);
+		SmartDashboard::PutNumber("cage-delay", 0.2);
 		SmartDashboard::PutBoolean("is-right", false);
 		SmartDashboard::PutBoolean("hot-debug", false);
 	}
@@ -37,12 +38,15 @@ public:
 		GetWatchdog().SetEnabled(false);
 		Windup wind_action(shooter);
 		DriveAction drive_action(drive, -SmartDashboard::GetNumber("drive-speed"), SmartDashboard::GetNumber("drive-duration"));
+		OpenArms open_arms_action(shooter, pickup, cage);
 		HotAction hot;
 		FireShot fire_shot(shooter);
+		
 //		Move pickup down so we can shoot
 
 		autoSeq.add_action(wind_action);
 		autoSeq.add_action(drive_action);
+		autoSeq.add_action(open_arms_action);
 		autoSeq.add_action(hot);
 		autoSeq.add_action(fire_shot);
 		while (IsAutonomous() and !IsDisabled()) {
