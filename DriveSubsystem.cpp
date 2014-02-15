@@ -12,6 +12,9 @@ void DriveSubsystem::robotInit(void){
 void DriveSubsystem::teleopInit(void){
 	drive.SetSafetyEnabled(false);
 	robot.compressor->Start();
+
+	rightShift.Set(DoubleSolenoid::kOff);
+	leftShift.Set(DoubleSolenoid::kOff);
 	
 	robot.joystick.register_axis("mag", 1, 2);
 	robot.joystick.register_axis("kaj-rot", 1, 4);
@@ -35,8 +38,8 @@ void DriveSubsystem::teleopInit(void){
 	std::string* ether = new std::string("ether");
 	
 	driveChooser.AddDefault("ether", ether);
-	driveChooser.AddDefault("culver", culver);
-	driveChooser.AddDefault("tank", tank);
+	driveChooser.AddObject("culver", culver);
+	driveChooser.AddObject("tank", tank);
 	SmartDashboard::PutData("drive-chooser", &driveChooser);
 }
 
