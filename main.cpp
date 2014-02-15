@@ -71,7 +71,10 @@ public:
 	void Test() {
 		robot.requirePneumatics();
 		robot.compressor->Enabled();
-
+		while(IsTest() && !IsDisabled()){
+			robot.compressor->Start();
+		}
+		robot.compressor->Stop();
 	}
 };
 
