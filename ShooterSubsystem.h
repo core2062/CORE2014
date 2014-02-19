@@ -41,7 +41,7 @@ public:
 
 class ShooterSubsystem : public CORESubsystem {
 	
-	Jaguar shooterWheel;
+	Victor shooterWheel;
 	SensorEdge photo;
 	Timer shootTimer;
 	

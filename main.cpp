@@ -17,13 +17,17 @@ class CORE2014: public SimpleRobot {
 	AutoSequencer autoSeq;
 public:
 	CORE2014() :
-		robot(), drive(robot),
-				cage(robot),
-				shooter(robot), pickup(robot), autoSeq() {
-		robot.add(drive);
-		robot.add(shooter);
-		robot.add(pickup);
-		robot.add(cage);
+		robot(),
+		drive(robot),
+		cage(robot),
+		shooter(robot),
+		pickup(robot),
+		autoSeq()
+	{
+			robot.add(drive);
+			robot.add(shooter);
+			robot.add(pickup);
+			robot.add(cage);
 	}
 
 	void RobotInit() {
@@ -73,10 +77,15 @@ public:
 	 * Runs during test mode
 	 */
 	void Test() {
+		Watchdog& wd = GetWatchdog();
+		wd.SetExpiration(.5);
+		wd.SetEnabled(true);
 		robot.requirePneumatics();
 		robot.compressor->Enabled();
 		while(IsTest() && !IsDisabled()){
+			wd.Feed();
 			robot.compressor->Start();
+			Wait(0.005);
 		}
 		robot.compressor->Stop();
 	}
