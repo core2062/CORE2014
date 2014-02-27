@@ -10,8 +10,9 @@ void PickupSubsystem::teleopInit(void){
 	
 	robot.joystick.register_button("pickup-out", 2, 7, JoystickCache::RISING);
 	robot.joystick.register_button("pickup-in", 2, 8, JoystickCache::RISING);
-	robot.joystick.register_button("roller-in", 2, 9, JoystickCache::RISING);
-	robot.joystick.register_button("roller-out", 2, 10, JoystickCache::RISING);
+	robot.joystick.register_button("roller-in", 2, 3);
+	robot.joystick.register_button("roller-out", 2, 5);
+	robot.joystick.register_button("pickup-toggle", 2, 11, JoystickCache::RISING);
 
 	pickup_left.Set(DoubleSolenoid::kOff);
 	pickup_right.Set(DoubleSolenoid::kOff);
@@ -20,7 +21,7 @@ void PickupSubsystem::teleop(void){
 	double roller_speed = SmartDashboard::GetNumber("roller-speed");
 	double roller_output = roller_motor.Get();
 	
-	if (robot.joystick.button("roller-in")){
+	/*if (robot.joystick.button("roller-in")){
 		if (roller_motor.Get() >= 0){
 			roller_output = -roller_speed;
 		} else { 
@@ -32,7 +33,15 @@ void PickupSubsystem::teleop(void){
 		} else { 
 			roller_output = 0;
 		}
+	}*/
+	if (robot.joystick.button("roller-in")){
+			roller_output = -roller_speed;
+	} else if (robot.joystick.button("roller-out")){
+			roller_output = roller_speed;
+	} else { 
+			roller_output = 0;
 	}
+		
 	
 	//pickup_motor.Set(pickup_output);
 	if (robot.joystick.button("pickup-out")){
@@ -41,10 +50,20 @@ void PickupSubsystem::teleop(void){
 	}else if (robot.joystick.button("pickup-in")){
 		pickup_left.Set(DoubleSolenoid::kForward);
 		pickup_right.Set(DoubleSolenoid::kForward);
-	} else {
+	}/* else {
 		pickup_left.Set(DoubleSolenoid::kOff);
 	    pickup_right.Set(DoubleSolenoid::kOff);
 
+	}*/
+	if (robot.joystick.button("pickup-toggle")){
+		DoubleSolenoid::Value v = pickup_left.Get();
+		if (v == DoubleSolenoid::kForward ){
+			pickup_left.Set(DoubleSolenoid::kReverse);
+			pickup_right.Set(DoubleSolenoid::kReverse);
+		}else{
+			pickup_left.Set(DoubleSolenoid::kForward);
+			pickup_right.Set(DoubleSolenoid::kForward);
+		}
 	}
 	roller_motor.Set(roller_output);
 }
