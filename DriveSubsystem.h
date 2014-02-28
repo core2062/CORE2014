@@ -25,6 +25,10 @@ class DriveSubsystem : public CORESubsystem {
 	bool quickturn;
 	
 	SendableChooser driveChooser;
+	
+	DigitalOutput sonicOut;
+	DigitalInput sonicIn;
+	Ultrasonic sonic;
 public:
 	std::string name(void){
 		return "drive";
@@ -51,8 +55,11 @@ public:
 		
 		quickturn(false),
 		
-		driveChooser()
+		driveChooser(),
 		
+		sonicOut(32),
+		sonicIn(31),
+		sonic(sonicOut, sonicIn, Ultrasonic::kInches)
 	{
 		drive.SetSafetyEnabled(false);
 	}
@@ -65,6 +72,8 @@ public:
 	void arcade_drive (float mag, float turn);
 	double getDistance(void);
 	double getLeftEnc(void);
+	double getSonicDist(void);
+	
 };
 class DriveAction : public WaitAction{
 	DriveSubsystem* drive;
@@ -119,6 +128,46 @@ public:
 		}
 	}
 	
+};
+
+class AntiDefenseAction : public Action{
+	DriveSubsystem* drive;
+	float speed;
+	double dist;
+	double ticks;
+public:
+	AntiDefenseAction(DriveSubsystem& drive, double ticks):
+		drive(&drive),
+		ticks(ticks)
+	{
+		speed =1;
+		dist = 0;
+	}
+	
+	void init(void){
+
+		dist = drive->getSonicDist();
+		drive->resetDistance();
+
+	
+	}
+	
+	ControlFlow call(void){
+		if (dist > SmartDashboard::GetNumber("sonic-dist-min") && dist < SmartDashboard::GetNumber("sonic-dist-max")){
+			return END;//of the universe
+		}else{
+			if (std::abs(drive->getDistance()) < ticks && SmartDashboard::GetBoolean("is-right")){
+				drive->arcade_drive(0, speed);
+				return CONTINUE;
+			}else if(std::abs(drive->getDistance()) < ticks && !SmartDashboard::GetBoolean("is-right")){
+				drive->arcade_drive(0, -speed);
+				return CONTINUE;				
+			} else {
+				drive->arcade_drive(0, 0);
+				return END;
+			}
+		}
+	}
 };
 
 #endif

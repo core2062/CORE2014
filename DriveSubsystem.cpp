@@ -92,4 +92,7 @@ void DriveSubsystem::teleop(void){
 void DriveSubsystem::arcade_drive(float mag, float turn){
 	drive.ArcadeDrive(mag, turn, false);
 }
+double DriveSubsystem::getSonicDist(void){
+	return sonic.GetRangeInches();
+}
 
