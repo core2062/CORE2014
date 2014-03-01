@@ -41,6 +41,8 @@ void DriveSubsystem::teleopInit(void){
 	driveChooser.AddObject("culver", culver);
 	driveChooser.AddObject("tank", tank);
 	SmartDashboard::PutData("drive-chooser", &driveChooser);
+
+	velocity = 0;
 }
 
 #include <math.h>
@@ -87,6 +89,8 @@ void DriveSubsystem::teleop(void){
 			leftShift.Set(DoubleSolenoid::kForward);
 		}
 	}
+	
+	SmartDashboard::PutNumber("accel-velocity", getVelocity());
 }
 
 void DriveSubsystem::arcade_drive(float mag, float turn){
@@ -95,4 +99,13 @@ void DriveSubsystem::arcade_drive(float mag, float turn){
 double DriveSubsystem::getSonicDist(void){
 	return sonic.GetRangeInches();
 }
-
+double DriveSubsystem::getVelocity(void){
+	velocity += accel.GetAcceleration(ADXL345_SPI::kAxis_Y);
+	return velocity;
+}
+float DriveSubsystem::getRot(void){
+	return gyro.GetAngle();
+}
+void DriveSubsystem::resetRot(void){
+	gyro.Reset();
+}
