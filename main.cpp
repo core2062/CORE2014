@@ -88,7 +88,7 @@ public:
 			autoSeq.add_action(open_arms_action);
 			autoSeq.add_action(hot);
 			autoSeq.add_action(fire_shot);
-		}else{
+		}else if (choice == "TwoBall"){
 //			autoSeq.add_action(anti_def_action);
 //			autoSeq.add_action(test_vision);
 			autoSeq.add_action(pickup_action);

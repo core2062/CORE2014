@@ -29,6 +29,97 @@ public:
 	void teleopInit(void);
 	void teleop(void);
 	void cylinderOut(void);
+	void putDown(void);
+	void putUp(void);
+	void intake(float speed);
+};
+
+class PickupOut : public Action{
+	PickupSubsystem* pickup;
+public:
+	PickupOut(PickupSubsystem& pickup):
+		pickup(&pickup)
+	{
+	}
+	
+	void init(void){
+	
+	}
+	
+	ControlFlow call(void){
+		pickup->putDown();
+		return END;
+		}
+};
+
+class PickupIn : public Action{
+	PickupSubsystem* pickup;
+public:
+	PickupIn(PickupSubsystem& pickup):
+		pickup(&pickup)
+	{
+	}
+	
+	void init(void){
+	
+	}
+	
+	ControlFlow call(void){
+		pickup->putUp();
+		return END;
+		}
+};
+
+class rollerIn : public WaitAction{
+	PickupSubsystem* pickup;
+public:
+	rollerIn (PickupSubsystem& pickup, double duration):
+		WaitAction(duration),
+		pickup(&pickup)
+	{	}
+	
+	void init(void){
+	}
+	
+	ControlFlow call(void){
+		ControlFlow flow = WaitAction::call();
+		if (flow == CONTINUE){
+			pickup->intake(-1);
+			return BACKGROUND;
+		} else {
+			pickup->intake(0);
+			return END;
+		}
+	}
+	
+};
+class pickupBall : public Action {
+	PickupSubsystem* pickup;
+	Timer pickupTimer;
+	bool isUp;
+public:
+	pickupBall (PickupSubsystem& pickup):
+		pickup(&pickup),
+		pickupTimer(),
+		isUp(false)
+	{   }
+	void init(void){
+		pickupTimer.Reset();
+		pickupTimer.Start();
+	}
+	ControlFlow call(void){
+		if (pickupTimer.Get()<1.5){
+			pickup->intake(-1);
+			if (pickupTimer.Get()>.5 && !isUp){
+				pickup->putUp();
+				isUp = true;
+			}
+			return CONTINUE;
+		}else{
+			pickup->intake(0);
+			return END;
+		}
+	}
 };
 
 #endif

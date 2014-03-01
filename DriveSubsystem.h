@@ -30,9 +30,6 @@ class DriveSubsystem : public CORESubsystem {
 	DigitalInput sonicIn;
 	Ultrasonic sonic;
 	
-	ADXL345_SPI accel; 
-	double velocity;
-	
 	Gyro gyro;
 public:
 	std::string name(void){
@@ -65,8 +62,6 @@ public:
 		sonicOut(32),
 		sonicIn(31),
 		sonic(sonicOut, sonicIn, Ultrasonic::kInches),
-		accel(1,5,5,5,5,ADXL345_SPI::kRange_4G),
-		velocity(0),
 		gyro(5)
 	{
 		drive.SetSafetyEnabled(false);
@@ -79,12 +74,11 @@ public:
 	void resetDistance(void);
 	void arcade_drive (float mag, float turn);
 	double getSonicDist(void);
-	double getVelocity(void);
 	float getRot(void);
 	void resetRot(void);
 	
 };
-class DriveAction : public Action{
+/*class DriveAction : public Action{
 	DriveSubsystem* drive;
 	float speed;
 	double distance;
@@ -115,12 +109,12 @@ public:
 			
 	}
 	
-};
-class DriveActionTime : public WaitAction{
+};*/
+class DriveAction : public WaitAction{
 	DriveSubsystem* drive;
 	float speed;
 public:
-	DriveActionTime(DriveSubsystem& drive, float speed, double duration):
+	DriveAction(DriveSubsystem& drive, float speed, double duration):
 		WaitAction(duration),
 		drive(&drive),
 		speed(speed)

@@ -42,7 +42,6 @@ void DriveSubsystem::teleopInit(void){
 	driveChooser.AddObject("tank", tank);
 	SmartDashboard::PutData("drive-chooser", &driveChooser);
 
-	velocity = 0;
 }
 
 #include <math.h>
@@ -90,7 +89,7 @@ void DriveSubsystem::teleop(void){
 		}
 	}
 	
-	SmartDashboard::PutNumber("accel-velocity", getVelocity());
+	SmartDashboard::PutNumber("sonic-dist", getSonicDist());
 }
 
 void DriveSubsystem::arcade_drive(float mag, float turn){
@@ -98,10 +97,6 @@ void DriveSubsystem::arcade_drive(float mag, float turn){
 }
 double DriveSubsystem::getSonicDist(void){
 	return sonic.GetRangeInches();
-}
-double DriveSubsystem::getVelocity(void){
-	velocity += accel.GetAcceleration(ADXL345_SPI::kAxis_Y);
-	return velocity;
 }
 float DriveSubsystem::getRot(void){
 	return gyro.GetAngle();
