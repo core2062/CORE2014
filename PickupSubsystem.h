@@ -34,50 +34,45 @@ public:
 	void intake(float speed);
 };
 
-class PickupOut : public Action{
+class PickupAction : public WaitAction{
 	PickupSubsystem* pickup;
+	int direction;
 public:
-	PickupOut(PickupSubsystem& pickup):
-		pickup(&pickup)
-	{
-	}
-	
-	void init(void){
-	
-	}
-	
-	ControlFlow call(void){
-		pickup->putDown();
-		return END;
-		}
-};
-
-class PickupIn : public Action{
-	PickupSubsystem* pickup;
-public:
-	PickupIn(PickupSubsystem& pickup):
-		pickup(&pickup)
-	{
-	}
-	
-	void init(void){
-	
-	}
-	
-	ControlFlow call(void){
-		pickup->putUp();
-		return END;
-		}
-};
-
-class roller : public WaitAction{
-	PickupSubsystem* pickup;
-	double speed;
-public:
-	roller (PickupSubsystem& pickup, double duration, double speed):
+	PickupAction(PickupSubsystem& pickup, int dir = -1, double duration = 0.1):
 		WaitAction(duration),
 		pickup(&pickup),
-		speed(&speed)
+		direction(dir)
+	{
+	}
+	
+	void init(void){
+	
+	}
+	
+	ControlFlow call(void){
+		ControlFlow flow = WaitAction::call();
+		if (flow == CONTINUE){
+			if (direction = -1){
+				pickup->putUp();
+			}else{
+				pickup->putDown();			
+			}
+
+		}else{
+			return END;
+		}
+	}	
+};
+
+
+class RollerAction : public WaitAction{
+	PickupSubsystem* pickup;
+	int direction;
+public:
+	RollerAction (PickupSubsystem& pickup, int dir, double duration):
+		WaitAction(duration),
+		pickup(&pickup),
+		direction(dir)
 	{	}
 	
 	void init(void){
@@ -86,7 +81,7 @@ public:
 	ControlFlow call(void){
 		ControlFlow flow = WaitAction::call();
 		if (flow == CONTINUE){
-			pickup->intake(speed);
+			pickup->intake(direction);
 			return CONTINUE;
 		} else {
 			pickup->intake(0);
@@ -95,27 +90,36 @@ public:
 	}
 	
 };
-class pickupBall : public Action {
+class PickupRoller : public Action {
 	PickupSubsystem* pickup;
 	Timer pickupTimer;
-	bool isUp;
+	bool isChanged;
+	int direction;
+	double duration;
 public:
-	pickupBall (PickupSubsystem& pickup):
+	PickupRoller(PickupSubsystem& pickup, int dir, double dur):
 		pickup(&pickup),
 		pickupTimer(),
-		isUp(false)
+		isChanged(false),
+		direction(dir),
+		duration(dur)
 	{   }
 	void init(void){
 		pickupTimer.Reset();
 		pickupTimer.Start();
 	}
 	ControlFlow call(void){
-		if (pickupTimer.Get()<1.5){
-			pickup->intake(-1);
-			if (pickupTimer.Get()>.5 && !isUp){
+		if (!isChanged){
+			if (direction = -1){
 				pickup->putUp();
-				isUp = true;
+			}else{
+			pickup->putDown();			
 			}
+
+		}		
+		if (pickupTimer.Get()<duration){
+			pickup->intake(-1);
+
 			return CONTINUE;
 		}else{
 			pickup->intake(0);

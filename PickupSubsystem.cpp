@@ -82,11 +82,6 @@ void PickupSubsystem::putUp(void){
 	//roller_motor.Set(-SmartDashboard::GetNumber("roller-speed"));
 }
 void PickupSubsystem::intake(float speed = 0){
-	if (speed>0){
-	roller_motor.Set(SmartDashboard::GetNumber("roller-speed"));
-	} else if (speed<0){
-		roller_motor.Set(-SmartDashboard::GetNumber("roller-speed"));
-	} else{
-		roller_motor.Set(0);
-	}
+	roller_motor.Set(SmartDashboard::GetNumber("roller-speed")*speed);
+
 }
