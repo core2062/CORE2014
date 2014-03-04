@@ -170,9 +170,25 @@ public:
 			}			
 		}
 	}
-	
 };
-
+class RotateIfAction : public RotateAction{
+	bool *flag;
+	bool invert;
+public:
+	RotateIfAction(DriveSubsystem& drive, bool *flag, bool invert, double angle, float speed):
+		RotateAction(drive, angle, speed),
+		flag(flag),
+		invert(invert)
+	{
+	}
+	
+	ControlFlow call(void){
+		if (!(*flag xor invert)){
+			return END;
+		}
+		return RotateAction::call();
+	}
+};
 class AntiDefenseAction : public WaitAction{
 	DriveSubsystem* drive;
 	float speed;
