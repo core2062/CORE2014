@@ -58,7 +58,7 @@ public:
 		GetWatchdog().SetEnabled(false);
 		std::string choice = * (std::string*) autoChoose.GetSelected();		
 		bool right_hot = true;
-		
+		autoSeq.clear();
 		if (choice == "Normal"){
 			WindupAction wind_action(shooter);
 			autoSeq.add_action(wind_action);
@@ -71,51 +71,62 @@ public:
 			}
 			OpenArms open_arms_action(shooter, pickup, cage);
 			autoSeq.add_action(open_arms_action);
-			VisionAction hot (&right_hot);
-			autoSeq.add_action(hot);
-			WaitMidpoint wait_action;
-			autoSeq.add_action(wait_action);
+//			VisionAction hot (&right_hot);
+//			autoSeq.add_action(hot);
+//			WaitMidpoint wait_action;
+//			autoSeq.add_action(wait_action);
 			ShootAction fire_shot(shooter);
 			autoSeq.add_action(fire_shot);
-		}else if (choice == "TwoBall"){
+
+			while (IsAutonomous() and !IsDisabled()) {
+				autoSeq.iter();
+				Wait(0.05); // wait for a motor update time
+			}
+		} else if (choice == "Two-Ball"){
 //			pickup down
 			PickupAction pickup_out_0(pickup, -1);
+			autoSeq.add_action(pickup_out_0);
 //			roller in - pickup ball
-			RollerAction roller_in_0(pickup, 1, 1);
+			RollerAction roller_in_0(pickup, -1, 1);
+			autoSeq.add_action(roller_in_0);
 //			windup(background)
-			WindupAction windup(shooter);
+//			WindupAction windup(shooter);
 //			drive forward 10 ft
-			DriveDistAction drive_ten (drive, 10*12);
+			DriveDistAction drive_dist_action (drive, -SmartDashboard::GetNumber("drive-speed"), 10*12);
+			autoSeq.add_action(drive_dist_action);
 //			turn right 30 degrees (need to go right for vision)
-			RotateAction rotate_for_vision (drive, 30);
+			RotateAction rotate_for_vision (drive, .8, 30);
+			autoSeq.add_action(rotate_for_vision);
 //			do vision
-			VisionAction vision_action (&right_hot);
+//			VisionAction vision_action (&right_hot);
 //			turn left if not hot
-			RotateIfAction rotate_if_not_hot (drive, &right_hot, -60, true);
+//			RotateIfAction rotate_if_not_hot (drive, &right_hot, -60, true);
 //			arms out, roller out
-			RollerAction roller_out_1 (pickup, -1, .5);
+			RollerAction roller_out_1 (pickup, 1, .5);
+			autoSeq.add_action(roller_out_1);
 //			shoot
-			ShootAction first_shot (shooter);
+//			ShootAction first_shot (shooter);
 //			intake roller .75 sec in
-			RollerAction roller_in_2 (pickup, 1, .75);
+			RollerAction roller_in_2 (pickup, -1, .75);
+			autoSeq.add_action(roller_in_2);
 //			Intake in and pickup up .25 sec
 			PickupRollerAction pickup_in_2 (pickup, 1, .25);
+			autoSeq.add_action(pickup_in_2);
 //			turn 60 degrees
-			RotateIfAction rotate_if_hot_2 (drive, &right_hot, -60);
-			RotateIfAction rotate_if_not_hot_2 (drive, &right_hot, 60, true);
+//			RotateIfAction rotate_if_hot_2 (drive, &right_hot, -60);
+//			RotateIfAction rotate_if_not_hot_2 (drive, &right_hot, 60, true);
 //			pickup down
 			PickupAction pickup_out_2(pickup, -1);
+			autoSeq.add_action(pickup_out_2);
 //			wait until 5 sec
-			WaitMidpoint wait_action;
+//			WaitMidpoint wait_action;
 //			shoot
-			ShootAction second_shot (shooter);
-			
-			
-		}
+//			ShootAction second_shot (shooter);
 
-		while (IsAutonomous() and !IsDisabled()) {
-			autoSeq.iter();
-			Wait(0.05); // wait for a motor update time
+			while (IsAutonomous() and !IsDisabled()) {
+				autoSeq.iter();
+				Wait(0.05); // wait for a motor update time
+			}
 		}
 	}
 

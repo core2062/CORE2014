@@ -41,16 +41,16 @@ void AutoSequencer::add_action(Action* action){
 }
 
 void AutoSequencer::iter(void){
-//	cout<<"iter start"<<endl;
+	cout<<"iter start"<<endl;
 	if(aqueue.empty()){
 		cout << "No remaining auto actions!"<<endl;	
 		return;
 	}
 	Action* a = aqueue.front();
-//	cout<<"current action: "<<a<<endl;
+	cout<<"current action: "<<a<<endl;
 	Action::ControlFlow return_val = a->call();
 	
-//	cout<<"after action"<<endl;
+	cout<<"after action"<<endl;
 	switch(return_val){
 	case Action::CONTINUE:
 		break;

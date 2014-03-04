@@ -57,7 +57,7 @@ public:
 			}else{
 				pickup->putDown();			
 			}
-
+			return CONTINUE;
 		}else{
 			return END;
 		}
@@ -90,14 +90,14 @@ public:
 	}
 	
 };
-class PickupRoller : public Action {
+class PickupRollerAction : public Action {
 	PickupSubsystem* pickup;
 	Timer pickupTimer;
 	bool isChanged;
 	int direction;
 	double duration;
 public:
-	PickupRoller(PickupSubsystem& pickup, int dir, double dur):
+	PickupRollerAction(PickupSubsystem& pickup, int dir, double dur):
 		pickup(&pickup),
 		pickupTimer(),
 		isChanged(false),
