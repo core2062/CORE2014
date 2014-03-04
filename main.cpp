@@ -80,8 +80,8 @@ public:
 		}else if (choice == "TwoBall"){
 //			pickup down
 			PickupAction pickup_out_0(pickup, -1);
-//			roller in .1 sec
-			RollerAction roller_in_0(pickup, 1, .5);
+//			roller in - pickup ball
+			RollerAction roller_in_0(pickup, 1, 1);
 //			windup(background)
 			WindupAction windup(shooter);
 //			drive forward 10 ft
