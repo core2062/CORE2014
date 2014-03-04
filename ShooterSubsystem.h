@@ -72,10 +72,10 @@ public:
 	void setAArmed(bool value);
 };
 
-class Windup : public Action{
+class WindupAction : public Action{
 	ShooterSubsystem* shooter;
 public:
-	Windup(ShooterSubsystem& shooter):
+	WindupAction(ShooterSubsystem& shooter):
 	shooter(&shooter){
 		shooter.setAArmed(false);
 	}
@@ -93,11 +93,11 @@ public:
 		}
 	}
 };
-class FireShot : public Action{
+class ShootAction : public Action{
 	ShooterSubsystem* shooter;
 	Timer timer;
 public:
-	FireShot(ShooterSubsystem& shooter):
+	ShootAction(ShooterSubsystem& shooter):
 	shooter(&shooter),
 	timer()
 	{}

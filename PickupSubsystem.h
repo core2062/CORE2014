@@ -70,12 +70,14 @@ public:
 		}
 };
 
-class rollerIn : public WaitAction{
+class roller : public WaitAction{
 	PickupSubsystem* pickup;
+	double speed;
 public:
-	rollerIn (PickupSubsystem& pickup, double duration):
+	roller (PickupSubsystem& pickup, double duration, double speed):
 		WaitAction(duration),
-		pickup(&pickup)
+		pickup(&pickup),
+		speed(&speed)
 	{	}
 	
 	void init(void){
@@ -84,8 +86,8 @@ public:
 	ControlFlow call(void){
 		ControlFlow flow = WaitAction::call();
 		if (flow == CONTINUE){
-			pickup->intake(-1);
-			return BACKGROUND;
+			pickup->intake(speed);
+			return CONTINUE;
 		} else {
 			pickup->intake(0);
 			return END;
@@ -117,6 +119,7 @@ public:
 			return CONTINUE;
 		}else{
 			pickup->intake(0);
+			pickupTimer.Stop();
 			return END;
 		}
 	}

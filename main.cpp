@@ -35,64 +35,82 @@ public:
 
 	void RobotInit() {
 		robot.robotInit();
+		
 		SmartDashboard::PutNumber("drive-duration", 2.5);
 		SmartDashboard::PutNumber("drive-tp-mid-duration", 2.5);
 		SmartDashboard::PutNumber("drive-speed", .6);
 		SmartDashboard::PutNumber("cage-delay", 0.2);
+		
 		SmartDashboard::PutBoolean("is-right", false);
 		SmartDashboard::PutBoolean("hot-debug", false);
+		
 		SmartDashboard::PutNumber("sonic-dist-min", 0);
 		SmartDashboard::PutNumber("sonic-dist-max", 5);
 		
-		SmartDashboard::PutBoolean("auto-arm", true);
-		SmartDashboard::PutBoolean("auto-drive", true);
-		SmartDashboard::PutBoolean("auto-open-arms", true);
-		SmartDashboard::PutBoolean("auto-hot", true);
-		SmartDashboard::PutBoolean("auto-shoot", true);
-		SmartDashboard::PutBoolean("use-ultra", true);
-		SmartDashboard::PutBoolean("return-ultra-true", false);
+		SmartDashboard::PutBoolean("anti-defense", true);
+		SmartDashboard::PutBoolean("return-ultra-true", false); // DEBUG
 		
-		std::string* twoBallString = new std::string("Two-Ball");
-		//std::string* catchString = new std::string("Catch");
-		std::string* normalString = new std::string("Normal");
-		
-		autoChoose.AddDefault("Normal", normalString);
-		autoChoose.AddObject("Two-Ball", twoBallString);
-		//autoChoose.AddObject("Catch", catchString);
+		autoChoose.AddDefault("Normal", new std::string("Normal"));
+		autoChoose.AddObject("Two-Ball", new std::string("Two-Ball"));
 		SmartDashboard::PutData("auto-chooser", &autoChoose);
-		
-		
 	}
 	void Autonomous() {
 		GetWatchdog().SetEnabled(false);
-		std::string choice = * (std::string*) autoChoose.GetSelected();
-		Windup wind_action(shooter);
-		DriveAction drive_action(drive, -SmartDashboard::GetNumber("drive-speed"), SmartDashboard::GetNumber("drive-duration"));
-		DriveAction drive_action_two(drive, -SmartDashboard::GetNumber("drive-speed"), SmartDashboard::GetNumber("drive-to-mid-duration"));		
-		OpenArms open_arms_action(shooter, pickup, cage);
-		HotAction hot;
-		FireShot fire_shot(shooter);
-		Windup wind_action_2(shooter);
-		AntiDefenseAction anti_def_action(drive, 1);
-		FireShot fire_shot_2(shooter);
-		PickupOut pickup_action(pickup);
+		std::string choice = * (std::string*) autoChoose.GetSelected();		
+		bool right_hot = true;
 		
-		//autoSeq.add_action(anit_def_action);
-		autoSeq.add_action(wind_action);
 		if (choice == "Normal"){
-			
+			WindupAction wind_action(shooter);
+			autoSeq.add_action(wind_action);
+			DriveAction drive_action(drive, -SmartDashboard::GetNumber("drive-speed"),
+					SmartDashboard::GetNumber("drive-duration"));
 			autoSeq.add_action(drive_action);
-			if (SmartDashboard::GetBoolean("use-ultra")){
+			AntiDefenseAction anti_def_action(drive, 1);
+			if (SmartDashboard::GetBoolean("anti-defense")){
 				autoSeq.add_action(anti_def_action);
 			}
+			OpenArms open_arms_action(shooter, pickup, cage);
 			autoSeq.add_action(open_arms_action);
+			VisionAction hot (&right_hot);
 			autoSeq.add_action(hot);
+			WaitMidpoint wait_action;
+			autoSeq.add_action(wait_action);
+			ShootAction fire_shot(shooter);
 			autoSeq.add_action(fire_shot);
 		}else if (choice == "TwoBall"){
-//			autoSeq.add_action(anti_def_action);
-//			autoSeq.add_action(test_vision);
-			autoSeq.add_action(pickup_action);
-			autoSeq.add_action(drive_action_two);
+//			pickup down
+			PickupAction pickup_out_0(pickup, -1);
+//			roller in .1 sec
+			RollerAction roller_in_0(pickup, 1, .5);
+//			windup(background)
+			WindupAction windup(shooter);
+//			drive forward 10 ft
+			DriveDistAction drive_ten (drive, 10*12);
+//			turn right 30 degrees (need to go right for vision)
+			RotateAction rotate_for_vision (drive, 30);
+//			do vision
+			VisionAction vision_action (&right_hot);
+//			turn left if not hot
+			RotateIfAction rotate_if_not_hot (drive, &right_hot, -60, true);
+//			arms out, roller out
+			RollerAction roller_out_1 (pickup, -1, .5);
+//			shoot
+			ShootAction first_shot (shooter);
+//			intake roller .75 sec in
+			RollerAction roller_in_2 (pickup, 1, .75);
+//			Intake in and pickup up .25 sec
+			PickupRollerAction pickup_in_2 (pickup, 1, .25);
+//			turn 60 degrees
+			RotateIfAction rotate_if_hot_2 (drive, &right_hot, -60);
+			RotateIfAction rotate_if_not_hot_2 (drive, &right_hot, 60, true);
+//			pickup down
+			PickupAction pickup_out_2(pickup, -1);
+//			wait until 5 sec
+			WaitMidpoint wait_action;
+//			shoot
+			ShootAction second_shot (shooter);
+			
+			
 		}
 
 		while (IsAutonomous() and !IsDisabled()) {

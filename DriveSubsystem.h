@@ -59,10 +59,10 @@ public:
 		
 		driveChooser(),
 		
-		sonicOut(32),
-		sonicIn(31),
+		sonicOut(8),
+		sonicIn(7),
 		sonic(sonicOut, sonicIn, Ultrasonic::kInches),
-		gyro(5)
+		gyro(1)
 	{
 		drive.SetSafetyEnabled(false);
 	}
@@ -135,13 +135,13 @@ public:
 	}
 	
 };
-class TurnAction : public Action{
+class RotateAction : public Action{
 	DriveSubsystem* drive;
 	float speed;
 	double degrees;
 	double rotation;
 public:
-	TurnAction(DriveSubsystem& drive, float speed, double degrees):
+	RotateAction(DriveSubsystem& drive, float speed, double degrees):
 		drive(&drive),
 		speed(speed),
 		degrees(degrees)

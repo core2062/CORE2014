@@ -8,11 +8,11 @@ namespace CORE{
 	bool visionMain();
 	void TestSubtraction();
 	
-	class HotAction : public Action{
+	class VisionAction : public Action{
 		bool hot;
 		DriverStation* ds;
 	public:
-		HotAction(){
+		VisionAction(){
 			hot = false;
 			ds = DriverStation::GetInstance();
 		}
@@ -32,7 +32,7 @@ namespace CORE{
 			cout << "wait over" << endl;
 			return END;
 		}
-		virtual ~HotAction(void){};
+		virtual ~VisionAction(void){};
 	};
 }
 
