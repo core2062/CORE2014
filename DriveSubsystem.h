@@ -78,28 +78,24 @@ public:
 	void resetRot(void);
 	
 };
-/*class DriveAction : public Action{
+class DriveDistAction : public Action{
 	DriveSubsystem* drive;
 	float speed;
 	double distance;
-	double currentDist;
 public:
-	DriveAction(DriveSubsystem& drive, float speed, double distance):
+	DriveDistAction(DriveSubsystem& drive, float speed, double distance):
 		drive(&drive),
 		speed(speed),
 		distance(distance)
 	{
-		currentDist = 0;
 	}
 	
 	void init(void){
+		
 	}
 	
 	ControlFlow call(void){
-		double velocity = drive->getVelocity();
-		SmartDashboard::PutNumber("accel-velocity", velocity);
-		currentDist += velocity;
-		if (currentDist < SmartDashboard::GetNumber("two_ball_distance")){
+		if (drive->getSonicDist() < distance){
 			drive->arcade_drive(speed, 0);
 			return CONTINUE;			
 		}else{
@@ -109,7 +105,7 @@ public:
 			
 	}
 	
-};*/
+};
 class DriveAction : public WaitAction{
 	DriveSubsystem* drive;
 	float speed;
