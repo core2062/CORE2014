@@ -9,16 +9,31 @@ namespace CORE{
 	void TestSubtraction();
 	
 	class VisionAction : public Action{
+		bool* right_hot;
+	public:
+		VisionAction(bool* right_hot):
+		right_hot(right_hot){
+			
+		}
+		void init(void){
+			
+		}
+		virtual ControlFlow call(void){
+			(*right_hot) = visionMain();
+			return END;
+		}
+		virtual ~VisionAction(void){};
+	};
+	class VisionWaitAction : public Action{
 		bool hot;
 		DriverStation* ds;
 	public:
-		VisionAction(){
+		VisionWaitAction(){
 			hot = false;
 			ds = DriverStation::GetInstance();
 		}
 		void init(void){
-//			hot = visionMain();
-			hot = SmartDashboard::GetBoolean("hot-debug");
+			hot = visionMain();
 			if(hot) {
 				cout << "hot, no wait" <<endl;
 			} else {
@@ -32,7 +47,7 @@ namespace CORE{
 			cout << "wait over" << endl;
 			return END;
 		}
-		virtual ~VisionAction(void){};
+		virtual ~VisionWaitAction(void){};
 	};
 	class WaitMidpointAction : public Action{
 		DriverStation* ds;

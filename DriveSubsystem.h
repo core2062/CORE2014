@@ -175,7 +175,7 @@ class RotateIfAction : public RotateAction{
 	bool *flag;
 	bool invert;
 public:
-	RotateIfAction(DriveSubsystem& drive, bool *flag, bool invert, double angle, float speed):
+	RotateIfAction(DriveSubsystem& drive, bool *flag, double angle, float speed, bool invert = false):
 		RotateAction(drive, angle, speed),
 		flag(flag),
 		invert(invert)

@@ -8,6 +8,8 @@ void DriveSubsystem::robotInit(void){
 	
 	SmartDashboard::PutNumber("culver-radius-gain", 1.2);
 	SmartDashboard::PutNumber("culver-raw-gain", 1.5);
+	
+	sonic.SetAutomaticMode(true);
 }
 void DriveSubsystem::teleopInit(void){
 	drive.SetSafetyEnabled(false);
@@ -89,7 +91,7 @@ void DriveSubsystem::teleop(void){
 		}
 	}
 	
-	SmartDashboard::PutNumber("sonic-dist", getSonicDist());
+	SmartDashboard::PutNumber("sonic-dist", sonic.GetRangeInches());
 }
 
 void DriveSubsystem::arcade_drive(float mag, float turn){

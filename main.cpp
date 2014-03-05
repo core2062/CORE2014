@@ -71,10 +71,8 @@ public:
 			}
 			OpenArms open_arms_action(shooter, pickup, cage);
 			autoSeq.add_action(open_arms_action);
-//			VisionAction hot (&right_hot);
-//			autoSeq.add_action(hot);
-//			WaitMidpoint wait_action;
-//			autoSeq.add_action(wait_action);
+			VisionWaitAction hot;
+			autoSeq.add_action(hot);
 			ShootAction fire_shot(shooter);
 			autoSeq.add_action(fire_shot);
 
@@ -98,14 +96,20 @@ public:
 			RotateAction rotate_for_vision (drive, .8, 30);
 			autoSeq.add_action(rotate_for_vision);
 //			do vision
-//			VisionAction vision_action (&right_hot);
+			VisionAction vision_action (&right_hot);
+			autoSeq.add_action(vision_action);
 //			turn left if not hot
-//			RotateIfAction rotate_if_not_hot (drive, &right_hot, -60, true);
+			RotateIfAction rotate_if_not_hot (drive, &right_hot, -60, .5, true);
+			autoSeq.add_action(rotate_if_not_hot);
 //			arms out, roller out
 			RollerAction roller_out_1 (pickup, 1, .5);
 			autoSeq.add_action(roller_out_1);
 //			shoot
 //			ShootAction first_shot (shooter);
+//			autoSeq.add_action(first_shot);
+//			wind up for second shot
+//			WindupAction windup_2(shooter);
+//			autoSeq.add_action(windup_2);
 //			intake roller .75 sec in
 			RollerAction roller_in_2 (pickup, -1, .75);
 			autoSeq.add_action(roller_in_2);
@@ -113,15 +117,19 @@ public:
 			PickupRollerAction pickup_in_2 (pickup, 1, .25);
 			autoSeq.add_action(pickup_in_2);
 //			turn 60 degrees
-//			RotateIfAction rotate_if_hot_2 (drive, &right_hot, -60);
-//			RotateIfAction rotate_if_not_hot_2 (drive, &right_hot, 60, true);
+			RotateIfAction rotate_if_hot_2 (drive, &right_hot, -60, .5);
+			RotateIfAction rotate_if_not_hot_2 (drive, &right_hot, 60, .5, true);
+			autoSeq.add_action(rotate_if_hot_2);
+			autoSeq.add_action(rotate_if_not_hot_2);
 //			pickup down
 			PickupAction pickup_out_2(pickup, -1);
 			autoSeq.add_action(pickup_out_2);
 //			wait until 5 sec
-//			WaitMidpoint wait_action;
+			WaitMidpointAction wait_action;
+			autoSeq.add_action(wait_action);
 //			shoot
 //			ShootAction second_shot (shooter);
+//			autoSeq.add_action(second_shot);
 
 			while (IsAutonomous() and !IsDisabled()) {
 				autoSeq.iter();
