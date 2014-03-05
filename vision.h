@@ -34,6 +34,22 @@ namespace CORE{
 		}
 		virtual ~VisionAction(void){};
 	};
+	class WaitMidpointAction : public Action{
+		DriverStation* ds;
+	public:
+		WaitMidpointAction(){
+			ds = DriverStation::GetInstance();
+		}
+		void init(void){
+		}
+		virtual ControlFlow call(void){
+			if(ds->GetMatchTime() < 5 ){
+				return CONTINUE;
+			}
+//			cout << "wait over" << endl;
+			return END;
+		}
+	};
 }
 
 #endif
