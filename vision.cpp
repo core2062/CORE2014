@@ -14,59 +14,61 @@ PixelValue pixVal(unsigned int r, unsigned int g, unsigned int b, unsigned int a
 #define chk(input) {if(!(input)) {goto error;}}
 #define log(im) {cout<<"writing "<<step<<endl; (im).Write(("/."+step+".bmp").c_str());}
 	
-	bool CORE::visionMain(){
+	bool CORE::visionMain() {
 		double minArea = 8.0;
 		double minThreshold = 2;
 		bool hot = false;
-		bool isHoriz = false;
-		bool isVertical = false;
+		bool horizontal = false;
+		bool vertical = false;
 		cout << "starting vision" << endl;
 		AxisCamera& camera = AxisCamera::GetInstance("10.20.62.11");
-		camera.WriteBrightness(10);
 		std::string step = "start";
-		while(!camera.IsFreshImage()){
+		while (!camera.IsFreshImage()) {
 			// pass
 		}
 		ColorImage* image = camera.GetImage();
-		log(*image);
+//		log(*image);
 		
 		step = "thresh";
 		BinaryImage* thresholdImage = image->ThresholdRGB(0, 22, 28, 195, 0, 71);
-		log(*thresholdImage);
+//		log(*thresholdImage);
 		
 		step = "small";
 		BinaryImage* small = thresholdImage->RemoveSmallObjects(true, 1);
-		log(*small);
+//		log(*small);
 		
 		vector<ParticleAnalysisReport>* reports = small->GetOrderedParticleAnalysisReports();
 		vector<ParticleAnalysisReport>::const_iterator i;
 		for(i = reports->begin(); i!=reports->end(); i++){
-			cout<< i->boundingRect.top <<" "<< i->boundingRect.left << endl;
+			cout << i->boundingRect.top <<" "<< i->boundingRect.left << endl;
 			if (i->particleArea > minArea){
-				cout << "passes area" << endl;
+				cout << "  passes area" << endl;
 				if ((i->boundingRect.width / i->boundingRect.height)> minThreshold){
-					isHoriz = true;
+					horizontal = true;
 					cout<< "horizontal seen"<<endl;
 				} else if((i->boundingRect.height / i->boundingRect.width)>minThreshold){
-					isVertical =true;
-					cout<< "Vertical seen"<<endl;
-				}
-				if (isVertical && isHoriz){
-					hot = true;
+					vertical = true;
+					cout<< "vertical seen"<<endl;
 				}
 			}
+		}
+		
+		if ( !(vertical || horizontal) ){
+			cout << "!WARNING! No vision targets found. Assuming goal is not hot." << endl;
+		} else if (!vertical) {
+			cout << "!WARNING! Only horizontal target found. Assuming goal is not hot." << endl;
 		}
 		
 		delete image;
 		delete thresholdImage;
 		delete small;
 		delete reports;
-		camera.WriteBrightness(50);
-		while(!camera.IsFreshImage()){
+//		camera.WriteBrightness(50);
+//		while(!camera.IsFreshImage()){
 			// pass
-		}
+//		}
 		AxisCamera::DeleteInstance();
-		return hot;
+		return horizontal && vertical;
 	}
 	void CORE::TestSubtraction()
 	{

@@ -53,6 +53,9 @@ public:
 		autoChoose.AddDefault("Normal", new std::string("Normal"));
 		autoChoose.AddObject("Two-Ball", new std::string("Two-Ball"));
 		SmartDashboard::PutData("auto-chooser", &autoChoose);
+		
+		AxisCamera& camera = AxisCamera::GetInstance("10.20.62.11");
+		camera.WriteBrightness(10);
 	}
 	void Autonomous() {
 		GetWatchdog().SetEnabled(false);
