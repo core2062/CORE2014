@@ -17,7 +17,6 @@ PixelValue pixVal(unsigned int r, unsigned int g, unsigned int b, unsigned int a
 	bool CORE::visionMain() {
 		double minArea = 8.0;
 		double minThreshold = 2;
-		bool hot = false;
 		bool horizontal = false;
 		bool vertical = false;
 		cout << "starting vision" << endl;
