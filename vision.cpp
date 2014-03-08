@@ -15,7 +15,7 @@ PixelValue pixVal(unsigned int r, unsigned int g, unsigned int b, unsigned int a
 #define log(im) {cout<<"writing "<<step<<endl; (im).Write(("/."+step+".bmp").c_str());}
 	
 	bool CORE::visionMain() {
-		double minArea = 8.0;
+		double minArea = 500;
 		double minThreshold = 2;
 		bool horizontal = false;
 		bool vertical = false;
@@ -34,14 +34,15 @@ PixelValue pixVal(unsigned int r, unsigned int g, unsigned int b, unsigned int a
 		
 		step = "small";
 		BinaryImage* small = thresholdImage->RemoveSmallObjects(true, 1);
-//		log(*small);
+		log(*small);
 		
 		vector<ParticleAnalysisReport>* reports = small->GetOrderedParticleAnalysisReports();
 		vector<ParticleAnalysisReport>::const_iterator i;
 		for(i = reports->begin(); i!=reports->end(); i++){
 			cout << i->boundingRect.top <<" "<< i->boundingRect.left << endl;
+			cout << "  area " << i->particleArea << endl;
 			if (i->particleArea > minArea){
-				cout << "  passes area" << endl;
+				cout << " ratio " << (i->boundingRect.width * 1.0 / i->boundingRect.height) <<endl;
 				if ((i->boundingRect.width / i->boundingRect.height)> minThreshold){
 					horizontal = true;
 					cout<< "horizontal seen"<<endl;

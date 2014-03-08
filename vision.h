@@ -33,7 +33,11 @@ namespace CORE{
 			ds = DriverStation::GetInstance();
 		}
 		void init(void){
+			Timer vision_timer;
+			vision_timer.Start();
 			hot = visionMain();
+			vision_timer.Stop();
+			cout << "vision took " << vision_timer.Get() << endl;
 			if(hot) {
 				cout << "hot, no wait" <<endl;
 			} else {
