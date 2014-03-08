@@ -23,7 +23,7 @@ Action::ControlFlow WaitAction::call(void){
 AutoSequencer::AutoSequencer():
 	aqueue(),
 	background(),
-	first_empty(false){
+	empty_flag(false){
 }
 
 void AutoSequencer::clear(void){
@@ -41,12 +41,16 @@ void AutoSequencer::add_action(Action* action){
 	aqueue.push(action);
 }
 
+void AutoSequencer::init(void){
+	aqueue.front()->init();
+}
+
 void AutoSequencer::iter(void){
 //	cout<<"iter start"<<endl;
 	if(aqueue.empty()){
-		if(!first_empty){
+		if(!empty_flag){
 			cout << "No remaining auto actions!"<<endl;
-			first_empty = true;
+			empty_flag = true;
 		}
 		return;
 	}

@@ -22,9 +22,12 @@ PixelValue pixVal(unsigned int r, unsigned int g, unsigned int b, unsigned int a
 		cout << "starting vision" << endl;
 		AxisCamera& camera = AxisCamera::GetInstance("10.20.62.11");
 		std::string step = "start";
-		while (!camera.IsFreshImage()) {
-			// pass
+		Timer t;
+		t.Start();
+		while (!camera.IsFreshImage() && t.Get() < 2) {
+			
 		}
+		t.Stop();
 		ColorImage* image = camera.GetImage();
 //		log(*image);
 		

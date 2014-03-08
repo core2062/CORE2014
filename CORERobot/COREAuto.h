@@ -47,12 +47,13 @@ public:
 class AutoSequencer{
 	std::queue<Action*> aqueue;
 	std::vector<Action*> background;
-	bool first_empty;
+	bool empty_flag;
 public:
 	AutoSequencer(void);
 	void clear(void);
 	void add_action(Action& action);
 	void add_action(Action* action);
+	void init(void);
 	void iter(void);
 };
 

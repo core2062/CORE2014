@@ -46,12 +46,13 @@ public:
 	}
 	
 	void init(void){
-	
+	cout << "pickup init" << endl;
 	}
 	
 	ControlFlow call(void){
 		ControlFlow flow = WaitAction::call();
 		if (flow == CONTINUE){
+			cout << "pickup interate" << endl;
 			if (direction == -1){
 				pickup->putDown();
 			}else{
@@ -59,6 +60,7 @@ public:
 			}
 			return CONTINUE;
 		}else{
+			cout << "pickup end" << endl;
 			return END;
 		}
 	}	

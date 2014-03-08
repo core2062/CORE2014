@@ -38,31 +38,33 @@ public:
 		
 		SmartDashboard::PutBoolean("auto-hot-debug", false);
 		
-		autoChoose.AddDefault("Normal", new std::string("Normal"));
-		autoChoose.AddObject("Two-Ball", new std::string("Two-Ball"));
+		autoChoose.AddDefault("One Ball", new std::string("one-ball"));
+		autoChoose.AddObject("Two Ball", new std::string("two-ball"));
 		SmartDashboard::PutData("auto-chooser", &autoChoose);
 
-		SmartDashboard::PutNumber("auto-drive-duration", .5);
+		SmartDashboard::PutNumber("auto-drive-duration", 0);
 		SmartDashboard::PutNumber("auto-drive-speed", .6);
 		SmartDashboard::PutNumber("auto-cage-delay", .5);
 		SmartDashboard::PutNumber("auto-pickup-delay", .5);
+		SmartDashboard::PutNumber("auto-drive-after-duration", .6);
 		
 		AxisCamera& camera = AxisCamera::GetInstance("10.20.62.11");
 		camera.WriteBrightness(10);
 	}
 	void Autonomous() {
-		GetWatchdog().SetEnabled(false);
+		Watchdog& wd = GetWatchdog();
 		std::string choice = * (std::string*) autoChoose.GetSelected();		
 		bool right_hot = true;
 		autoSeq.clear();
 		AxisCamera& camera = AxisCamera::GetInstance("10.20.62.11");
 		camera.WriteBrightness(10);
-		if (choice == "Normal"){
+		cout << "Auto mode: " <<choice << endl;
+		if (choice == "one-ball"){
 //			WindupAction wind_action(shooter);
 //			autoSeq.add_action(wind_action);
-			DriveAction drive_action(drive, -SmartDashboard::GetNumber("auto-drive-speed"),
-					SmartDashboard::GetNumber("auto-drive-duration"));
-			autoSeq.add_action(drive_action);
+//			DriveAction drive_action(drive, -SmartDashboard::GetNumber("auto-drive-speed"),
+//					SmartDashboard::GetNumber("auto-drive-duration"));
+//			autoSeq.add_action(drive_action);
 			CageAction cage_action (shooter, cage, -1, SmartDashboard::GetNumber("auto-cage-delay"));
 			autoSeq.add_action(cage_action);
 			PickupAction pickup_action (pickup, -1, SmartDashboard::GetNumber("auto-pickup-delay"));
@@ -71,12 +73,20 @@ public:
 			autoSeq.add_action(hot);
 			ShootAction fire_shot(shooter);
 			autoSeq.add_action(fire_shot);
+			WaitAction wait_before_drive(1);
+			autoSeq.add_action(wait_before_drive);
+			DriveAction drive_after(drive, -SmartDashboard::GetNumber("auto-drive-speed"),
+								SmartDashboard::GetNumber("auto-drive-after-duration"));
+			autoSeq.add_action(drive_after);
 
+			autoSeq.init();
+			wd.Feed();
 			while (IsAutonomous() and !IsDisabled()) {
 				autoSeq.iter();
+				wd.Feed();
 				Wait(0.05); // wait for a motor update time
 			}
-		} else if (choice == "Two-Ball"){
+		} else if (choice == "two-ball"){
 			return;
 //			pickup down
 			PickupAction pickup_out_0(pickup, -1);
@@ -130,10 +140,15 @@ public:
 			ShootAction second_shot (shooter);
 			autoSeq.add_action(second_shot);
 
+			autoSeq.init();
+			wd.Feed();
 			while (IsAutonomous() and !IsDisabled()) {
 				autoSeq.iter();
+				wd.Feed();
 				Wait(0.05); // wait for a motor update time
 			}
+		} else {
+			cout << "Bad auto type" <<endl;
 		}
 	}
 
