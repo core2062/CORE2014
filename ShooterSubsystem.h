@@ -67,16 +67,35 @@ public:
 	void teleop(void);
 	
 	bool getSwitch(void);
+	bool getSwitchRaw(void);
 	void setMotor(double speed);
 	bool isArmed(void);
 	void setArmed(bool value);
 };
-
+class WaitArmedAction : public Action{
+	ShooterSubsystem* shooter;
+	public:
+		WaitArmedAction(ShooterSubsystem& shooter):
+		shooter(&shooter){
+			
+		}
+		void init(void){
+			
+		}
+		ControlFlow call(void){
+			if (!shooter->isArmed()){
+				return CONTINUE;
+			}
+			return END;
+		}
+};
 class WindupAction : public Action{
 	ShooterSubsystem* shooter;
+	bool sync;
 public:
-	WindupAction(ShooterSubsystem& shooter):
-	shooter(&shooter){
+	WindupAction(ShooterSubsystem& shooter, bool sync = true):
+	shooter(&shooter),
+	sync(sync){
 		
 	}
 	void init(void){
@@ -85,7 +104,7 @@ public:
 	ControlFlow call(void){
 		if(!shooter->getSwitch()){
 			shooter->setMotor(SmartDashboard::GetNumber("choochoo-speed"));
-			return CONTINUE;
+			return sync?CONTINUE:BACKGROUND;
 		} else {
 			shooter->setMotor(0);
 			shooter->setArmed(true);

@@ -68,14 +68,12 @@ public:
 };
 
 class CageAction : public Action{
-	ShooterSubsystem* shooter;
 	CageSubsystem* cage;
 	Timer timer;
 	int direction;
 	double delay;
 public:
-	CageAction(ShooterSubsystem& shooter, CageSubsystem& cage, int direction, double delay):
-	shooter(&shooter),
+	CageAction(CageSubsystem& cage, int direction, double delay):
 	cage(&cage),
 	timer(),
 	direction(direction),
@@ -85,9 +83,6 @@ public:
 		timer.Reset();
 	}
 	ControlFlow call(void){
-		if(!shooter->isArmed()){
-			return CONTINUE;
-		}
 		if (timer.Get() >= delay){
 			timer.Stop();
 			return END;

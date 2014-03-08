@@ -51,15 +51,15 @@ public:
 	
 	ControlFlow call(void){
 		ControlFlow flow = WaitAction::call();
-		if (flow == CONTINUE){
+		if (flow == CONTINUE) {
 			cout << "pickup interate" << endl;
-			if (direction == -1){
+			if (direction < 0) {
 				pickup->putDown();
-			}else{
+			} else {
 				pickup->putUp();			
 			}
 			return CONTINUE;
-		}else{
+		} else {
 			cout << "pickup end" << endl;
 			return END;
 		}
@@ -95,33 +95,26 @@ public:
 class PickupRollerAction : public Action {
 	PickupSubsystem* pickup;
 	Timer pickupTimer;
-	bool isChanged;
 	int direction;
 	double duration;
 public:
 	PickupRollerAction(PickupSubsystem& pickup, int dir, double dur):
 		pickup(&pickup),
 		pickupTimer(),
-		isChanged(false),
 		direction(dir),
 		duration(dur)
 	{   }
 	void init(void){
-		pickupTimer.Reset();
 		pickupTimer.Start();
 	}
 	ControlFlow call(void){
-		if (!isChanged){
-			if (direction = -1){
-				pickup->putUp();
-			}else{
-			pickup->putDown();			
+		if (pickupTimer.Get() < duration){
+			pickup->intake(direction);
+			if (direction < 0){
+				pickup->putDown();
+			} else {
+				pickup->putUp();			
 			}
-
-		}		
-		if (pickupTimer.Get()<duration){
-			pickup->intake(-1);
-
 			return CONTINUE;
 		}else{
 			pickup->intake(0);
@@ -130,5 +123,17 @@ public:
 		}
 	}
 };
-
+class RollerIn : public Action {
+	PickupSubsystem* pickup;
+public:
+	RollerIn(PickupSubsystem& pickup):
+		pickup(&pickup)
+	{   }
+	void init(void){
+		pickup->intake(-1);
+	}
+	ControlFlow call(void){
+		return END;
+	}
+};
 #endif

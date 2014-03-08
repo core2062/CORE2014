@@ -9,6 +9,7 @@ void ShooterSubsystem::teleopInit(void){
 	robot.joystick.register_button("shoot", 2, 1);
 	robot.joystick.register_button("arm", 2, 4);
 	robot.joystick.register_button("unwind", 2 ,6);
+	armed = photo.Get();
 }
 void ShooterSubsystem::teleop(void){
 	if (photo.Rise()){
@@ -59,6 +60,9 @@ void ShooterSubsystem::teleop(void){
 }
 bool ShooterSubsystem::getSwitch(void){
 	return photo.Rise();
+}
+bool ShooterSubsystem::getSwitchRaw(void){
+	return photo.Get();
 }
 void ShooterSubsystem::setMotor(double speed){
 	shooterWheel.Set(speed*SmartDashboard::GetNumber("choochoo-speed"));
