@@ -46,6 +46,7 @@ class ShooterSubsystem : public CORESubsystem {
 	Timer shootTimer;
 	
 	bool armed;
+	bool unwound;
 	bool autoArmed;
 	
 public:
@@ -58,6 +59,7 @@ public:
 		photo(2),
 		shootTimer(),
 		armed(false),
+		unwound(false)
 		autoArmed(false)
 	{
 	}
@@ -116,7 +118,7 @@ public:
 		if(timer.Get() == 0){
 			timer.Start();
 		}
-		shooter->setMotor(SmartDashboard::GetNumber("choochoo-speed"));
+		shooter->setMotor(1);
 		return CONTINUE;
 	}
 };
