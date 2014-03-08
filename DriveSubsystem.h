@@ -78,34 +78,34 @@ public:
 	void resetRot(void);
 	
 };
-class DriveDistAction : public Action{
-	DriveSubsystem* drive;
-	float speed;
-	double distance;
-public:
-	DriveDistAction(DriveSubsystem& drive, float speed, double distance):
-		drive(&drive),
-		speed(speed),
-		distance(distance)
-	{
-	}
-	
-	void init(void){
-		
-	}
-	
-	ControlFlow call(void){
-		if (drive->getSonicDist() < distance){
-			drive->arcade_drive(speed, 0);
-			return CONTINUE;			
-		}else{
-			drive->arcade_drive(0, 0);
-			return END;			
-		}
-			
-	}
-	
-};
+//class DriveDistAction : public Action{
+//	DriveSubsystem* drive;
+//	float speed;
+//	double distance;
+//public:
+//	DriveDistAction(DriveSubsystem& drive, float speed, double distance):
+//		drive(&drive),
+//		speed(speed),
+//		distance(distance)
+//	{
+//	}
+//	
+//	void init(void){
+//		
+//	}
+//	
+//	ControlFlow call(void){
+//		if (drive->getSonicDist() < distance){
+//			drive->arcade_drive(speed, 0);
+//			return CONTINUE;			
+//		}else{
+//			drive->arcade_drive(0, 0);
+//			return END;			
+//		}
+//			
+//	}
+//	
+//};
 class DriveAction : public WaitAction{
 	DriveSubsystem* drive;
 	float speed;
@@ -189,46 +189,46 @@ public:
 		return RotateAction::call();
 	}
 };
-class AntiDefenseAction : public WaitAction{
-	DriveSubsystem* drive;
-	float speed;
-	double dist;
-public:
-	AntiDefenseAction(DriveSubsystem& drive, double duration):
-		WaitAction(duration),
-		drive(&drive)
-	{
-		speed =1;
-		dist = 0;
-	}
-	
-	void init(void){
-
-		dist = drive->getSonicDist();
-
-	
-	}
-	ControlFlow call(void){
-		ControlFlow flow = WaitAction::call();
-		if (flow == CONTINUE){
-			if ((dist > SmartDashboard::GetNumber("sonic-dist-min") && dist < SmartDashboard::GetNumber("sonic-dist-max")) || SmartDashboard::GetBoolean("return-ultra-true")){
-				if (SmartDashboard::GetBoolean("is-right")){
-					drive->arcade_drive(0, speed);
-					return CONTINUE;
-				}else {
-					drive->arcade_drive(0, -speed);
-					return CONTINUE;				
-				}
-			}else{
-				drive->arcade_drive(0, 0);
-				return END;						
-			}
-		} else {
-			drive->arcade_drive(0, 0);
-			return END;
-		}
-
-	}
-};
+//class AntiDefenseAction : public WaitAction{
+//	DriveSubsystem* drive;
+//	float speed;
+//	double dist;
+//public:
+//	AntiDefenseAction(DriveSubsystem& drive, double duration):
+//		WaitAction(duration),
+//		drive(&drive)
+//	{
+//		speed =1;
+//		dist = 0;
+//	}
+//	
+//	void init(void){
+//
+//		dist = drive->getSonicDist();
+//
+//	
+//	}
+//	ControlFlow call(void){
+//		ControlFlow flow = WaitAction::call();
+//		if (flow == CONTINUE){
+//			if ((dist > SmartDashboard::GetNumber("sonic-dist-min") && dist < SmartDashboard::GetNumber("sonic-dist-max")) || SmartDashboard::GetBoolean("return-ultra-true")){
+//				if (SmartDashboard::GetBoolean("is-right")){
+//					drive->arcade_drive(0, speed);
+//					return CONTINUE;
+//				}else {
+//					drive->arcade_drive(0, -speed);
+//					return CONTINUE;				
+//				}
+//			}else{
+//				drive->arcade_drive(0, 0);
+//				return END;						
+//			}
+//		} else {
+//			drive->arcade_drive(0, 0);
+//			return END;
+//		}
+//
+//	}
+//};
 
 #endif

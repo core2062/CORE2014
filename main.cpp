@@ -53,13 +53,9 @@ public:
 		if (choice == "Normal"){
 			WindupAction wind_action(shooter);
 			autoSeq.add_action(wind_action);
-			DriveAction drive_action(drive, -SmartDashboard::GetNumber("drive-speed"),
-					SmartDashboard::GetNumber("drive-duration"));
+			DriveAction drive_action(drive, -SmartDashboard::GetNumber("auto-drive-speed"),
+					SmartDashboard::GetNumber("auto-drive-duration"));
 			autoSeq.add_action(drive_action);
-			AntiDefenseAction anti_def_action(drive, 1);
-			if (SmartDashboard::GetBoolean("anti-defense")){
-				autoSeq.add_action(anti_def_action);
-			}
 			OpenArms open_arms_action(shooter, pickup, cage);
 			autoSeq.add_action(open_arms_action);
 			VisionWaitAction hot;
@@ -79,10 +75,12 @@ public:
 			RollerAction roller_in_0(pickup, -1, 1);
 			autoSeq.add_action(roller_in_0);
 //			windup(background)
-//			WindupAction windup(shooter);
+			WindupAction windup(shooter);
+			autoSeq.add_action(windup);
 //			drive forward 10 ft
-			DriveDistAction drive_dist_action (drive, -SmartDashboard::GetNumber("drive-speed"), 10*12);
-			autoSeq.add_action(drive_dist_action);
+			DriveAction drive_action (drive, -SmartDashboard::GetNumber("auto-drive-speed"),
+					SmartDashboard::GetNumber("auto-drive-duration"));
+			autoSeq.add_action(drive_action);
 //			turn right 30 degrees (need to go right for vision)
 			RotateAction rotate_for_vision (drive, .8, 30);
 			autoSeq.add_action(rotate_for_vision);
@@ -96,11 +94,11 @@ public:
 			RollerAction roller_out_1 (pickup, 1, .5);
 			autoSeq.add_action(roller_out_1);
 //			shoot
-//			ShootAction first_shot (shooter);
-//			autoSeq.add_action(first_shot);
+			ShootAction first_shot (shooter);
+			autoSeq.add_action(first_shot);
 //			wind up for second shot
-//			WindupAction windup_2(shooter);
-//			autoSeq.add_action(windup_2);
+			WindupAction windup_2(shooter);
+			autoSeq.add_action(windup_2);
 //			intake roller .75 sec in
 			RollerAction roller_in_2 (pickup, -1, .75);
 			autoSeq.add_action(roller_in_2);
@@ -119,8 +117,8 @@ public:
 			WaitMidpointAction wait_action;
 			autoSeq.add_action(wait_action);
 //			shoot
-//			ShootAction second_shot (shooter);
-//			autoSeq.add_action(second_shot);
+			ShootAction second_shot (shooter);
+			autoSeq.add_action(second_shot);
 
 			while (IsAutonomous() and !IsDisabled()) {
 				autoSeq.iter();
@@ -134,6 +132,9 @@ public:
 		Watchdog& wd = GetWatchdog();
 		wd.SetExpiration(.5);
 		wd.SetEnabled(true);
+		AxisCamera& camera = AxisCamera::GetInstance("10.20.62.11");
+		camera.WriteBrightness(50);
+		
 		while (IsOperatorControl() && !IsDisabled()) {
 			wd.Feed();
 			SmartDashboard::PutBoolean("compressor-running",

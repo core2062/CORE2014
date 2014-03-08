@@ -62,11 +62,6 @@ PixelValue pixVal(unsigned int r, unsigned int g, unsigned int b, unsigned int a
 		delete thresholdImage;
 		delete small;
 		delete reports;
-//		camera.WriteBrightness(50);
-//		while(!camera.IsFreshImage()){
-			// pass
-//		}
-		AxisCamera::DeleteInstance();
 		return horizontal && vertical;
 	}
 	void CORE::TestSubtraction()

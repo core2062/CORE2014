@@ -63,9 +63,9 @@ bool ShooterSubsystem::getSwitch(void){
 void ShooterSubsystem::setMotor(double speed){
 	shooterWheel.Set(speed*SmartDashboard::GetNumber("choochoo-speed"));
 }
-bool ShooterSubsystem::aArmed(void){
-	return autoArmed;
+bool ShooterSubsystem::isArmed(void){
+	return armed;
 }
-void ShooterSubsystem::setAArmed(bool value){
-	autoArmed = value;
+void ShooterSubsystem::setArmed(bool value){
+	armed = value;
 }

@@ -47,7 +47,6 @@ class ShooterSubsystem : public CORESubsystem {
 	
 	bool armed;
 	bool unwound;
-	bool autoArmed;
 	
 public:
 	std::string name(void){
@@ -60,7 +59,6 @@ public:
 		shootTimer(),
 		armed(false),
 		unwound(false)
-		autoArmed(false)
 	{
 	}
 	
@@ -70,8 +68,8 @@ public:
 	
 	bool getSwitch(void);
 	void setMotor(double speed);
-	bool aArmed(void);
-	void setAArmed(bool value);
+	bool isArmed(void);
+	void setArmed(bool value);
 };
 
 class WindupAction : public Action{
@@ -79,7 +77,7 @@ class WindupAction : public Action{
 public:
 	WindupAction(ShooterSubsystem& shooter):
 	shooter(&shooter){
-		shooter.setAArmed(false);
+		
 	}
 	void init(void){
 		shooter->getSwitch();
@@ -90,7 +88,7 @@ public:
 			return CONTINUE;
 		} else {
 			shooter->setMotor(0);
-			shooter->setAArmed(true);
+			shooter->setArmed(true);
 			return END;
 		}
 	}
@@ -107,7 +105,7 @@ public:
 		timer.Reset();
 	}
 	ControlFlow call(void){
-		if(!shooter->aArmed()){
+		if(!shooter->isArmed()){
 			return CONTINUE;
 		}
 		if (timer.Get() >= SmartDashboard::GetNumber("shoot-delay")){

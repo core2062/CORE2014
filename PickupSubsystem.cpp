@@ -67,19 +67,13 @@ void PickupSubsystem::teleop(void){
 	}
 	roller_motor.Set(roller_output);
 }
-void PickupSubsystem::cylinderOut(void){
-	pickup_left.Set(DoubleSolenoid::kReverse);
-	pickup_right.Set(DoubleSolenoid::kReverse);
-}
 void PickupSubsystem::putDown(void){
 	pickup_left.Set(DoubleSolenoid::kForward);
 	pickup_right.Set(DoubleSolenoid::kForward);
-	//roller_motor.Set(-SmartDashboard::GetNumber("roller-speed"));
 }
 void PickupSubsystem::putUp(void){
 	pickup_left.Set(DoubleSolenoid::kReverse);
 	pickup_right.Set(DoubleSolenoid::kReverse);
-	//roller_motor.Set(-SmartDashboard::GetNumber("roller-speed"));
 }
 void PickupSubsystem::intake(float speed = 0){
 	roller_motor.Set(SmartDashboard::GetNumber("roller-speed")*speed);

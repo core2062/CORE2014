@@ -61,7 +61,6 @@ namespace CORE{
 			if(ds->GetMatchTime() < 5 ){
 				return CONTINUE;
 			}
-//			cout << "wait over" << endl;
 			return END;
 		}
 	};

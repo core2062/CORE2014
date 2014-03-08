@@ -45,34 +45,24 @@ public:
 	shooter(&shooter),
 	pickup(&pickup),
 	cage(&cage),
-	timer(),
-	armed(false)
+	timer()
 	{}
 	void init(void){
-		cout << "init open arms" << endl;
 		timer.Reset();
 	}
 	ControlFlow call(void){
-		if(!armed && !shooter->aArmed()){
+		if(!shooter->isArmed()){
 			return CONTINUE;
-		} else if (!armed && shooter->aArmed()) {
-			cout << "resetting armed" << endl;
-			shooter->setAArmed(false);
-			armed = true;
 		}
 		if (timer.Get() >= SmartDashboard::GetNumber("cage-delay")){
 			timer.Stop();
-			shooter->setAArmed(true);
-			cout << "ending open arms" << endl;
 			return END;
 		}
 		if(timer.Get() == 0){
-			cout << "starting timer" << endl;
 			timer.Start();
 		}
-		cout << "cage fall through" << endl;
 		cage->cylinderOut();
-		pickup->cylinderOut();
+		pickup->putDown();
 		return CONTINUE;
 	}
 };
