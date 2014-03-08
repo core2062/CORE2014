@@ -58,9 +58,11 @@ void PickupSubsystem::teleop(void){
 	if (robot.joystick.button("pickup-toggle")){
 		DoubleSolenoid::Value v = pickup_left.Get();
 		if (v == DoubleSolenoid::kForward ){
+			cout << "p reverse" <<endl;
 			pickup_left.Set(DoubleSolenoid::kReverse);
 			pickup_right.Set(DoubleSolenoid::kReverse);
 		}else{
+			cout << "p forward" <<endl;
 			pickup_left.Set(DoubleSolenoid::kForward);
 			pickup_right.Set(DoubleSolenoid::kForward);
 		}
@@ -68,12 +70,12 @@ void PickupSubsystem::teleop(void){
 	roller_motor.Set(roller_output);
 }
 void PickupSubsystem::putDown(void){
-	pickup_left.Set(DoubleSolenoid::kForward);
-	pickup_right.Set(DoubleSolenoid::kForward);
-}
-void PickupSubsystem::putUp(void){
 	pickup_left.Set(DoubleSolenoid::kReverse);
 	pickup_right.Set(DoubleSolenoid::kReverse);
+}
+void PickupSubsystem::putUp(void){
+	pickup_left.Set(DoubleSolenoid::kForward);
+	pickup_right.Set(DoubleSolenoid::kForward);
 }
 void PickupSubsystem::intake(float speed = 0){
 	roller_motor.Set(SmartDashboard::GetNumber("roller-speed")*speed);

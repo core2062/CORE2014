@@ -80,7 +80,7 @@ public:
 		
 	}
 	void init(void){
-		shooter->getSwitch();
+		
 	}
 	ControlFlow call(void){
 		if(!shooter->getSwitch()){

@@ -22,12 +22,13 @@ Action::ControlFlow WaitAction::call(void){
 
 AutoSequencer::AutoSequencer():
 	aqueue(),
-	background(){
+	background(),
+	first_empty(false){
 }
 
 void AutoSequencer::clear(void){
-	aqueue.empty();
-	background.empty();
+	aqueue.c.clear();
+	background.clear();
 }
 
 void AutoSequencer::add_action(Action& action){
@@ -41,16 +42,19 @@ void AutoSequencer::add_action(Action* action){
 }
 
 void AutoSequencer::iter(void){
-	cout<<"iter start"<<endl;
+//	cout<<"iter start"<<endl;
 	if(aqueue.empty()){
-		cout << "No remaining auto actions!"<<endl;	
+		if(!first_empty){
+			cout << "No remaining auto actions!"<<endl;
+			first_empty = true;
+		}
 		return;
 	}
 	Action* a = aqueue.front();
-	cout<<"current action: "<<a<<endl;
+//	cout<<"current action: "<<a<<endl;
 	Action::ControlFlow return_val = a->call();
 	
-	cout<<"after action"<<endl;
+//	cout<<"after action"<<endl;
 	switch(return_val){
 	case Action::CONTINUE:
 		break;

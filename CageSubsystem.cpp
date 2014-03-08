@@ -2,13 +2,10 @@
 
 void CageSubsystem::robotInit(void){
 	robot.requirePneumatics();
-	SmartDashboard::PutNumber("auto-cage-delay", 0.2);
 }
 void CageSubsystem::teleopInit(void){
 	robot.compressor->Start();
 	robot.joystick.register_button("toggle", 2 ,12, JoystickCache::RISING);
-	leftWing.Set(DoubleSolenoid::kForward);
-	rightWing.Set(DoubleSolenoid::kForward);
 }
 void CageSubsystem::teleop(void){
 	 if (robot.joystick.button("toggle")){
@@ -28,4 +25,9 @@ void CageSubsystem::teleop(void){
 void CageSubsystem::cylinderOut(void){
 	leftWing.Set(DoubleSolenoid::kReverse);
 	rightWing.Set(DoubleSolenoid::kReverse);
+}
+
+void CageSubsystem::cylinderIn(void){
+	leftWing.Set(DoubleSolenoid::kForward);
+	rightWing.Set(DoubleSolenoid::kForward);
 }

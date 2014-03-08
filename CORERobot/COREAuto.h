@@ -47,6 +47,7 @@ public:
 class AutoSequencer{
 	std::queue<Action*> aqueue;
 	std::vector<Action*> background;
+	bool first_empty;
 public:
 	AutoSequencer(void);
 	void clear(void);

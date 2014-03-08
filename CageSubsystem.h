@@ -31,7 +31,7 @@ public:
 	void teleopInit(void);
 	void teleop(void);
 	void cylinderOut(void);
-	
+	void cylinderIn(void);
 };
 
 class OpenArms : public Action{
@@ -54,7 +54,7 @@ public:
 		if(!shooter->isArmed()){
 			return CONTINUE;
 		}
-		if (timer.Get() >= SmartDashboard::GetNumber("cage-delay")){
+		if (timer.Get() >= SmartDashboard::GetNumber("auto-cage-delay")){
 			timer.Stop();
 			return END;
 		}
@@ -63,6 +63,43 @@ public:
 		}
 		cage->cylinderOut();
 		pickup->putDown();
+		return CONTINUE;
+	}
+};
+
+class CageAction : public Action{
+	ShooterSubsystem* shooter;
+	CageSubsystem* cage;
+	Timer timer;
+	int direction;
+	double delay;
+public:
+	CageAction(ShooterSubsystem& shooter, CageSubsystem& cage, int direction, double delay):
+	shooter(&shooter),
+	cage(&cage),
+	timer(),
+	direction(direction),
+	delay(delay)
+	{}
+	void init(void){
+		timer.Reset();
+	}
+	ControlFlow call(void){
+		if(!shooter->isArmed()){
+			return CONTINUE;
+		}
+		if (timer.Get() >= delay){
+			timer.Stop();
+			return END;
+		}
+		if(timer.Get() == 0){
+			timer.Start();
+		}
+		if (direction < 0){
+			cage->cylinderOut();
+		} else {
+			cage->cylinderIn();
+		}
 		return CONTINUE;
 	}
 };

@@ -41,6 +41,11 @@ public:
 		autoChoose.AddDefault("Normal", new std::string("Normal"));
 		autoChoose.AddObject("Two-Ball", new std::string("Two-Ball"));
 		SmartDashboard::PutData("auto-chooser", &autoChoose);
+
+		SmartDashboard::PutNumber("auto-drive-duration", .5);
+		SmartDashboard::PutNumber("auto-drive-speed", .6);
+		SmartDashboard::PutNumber("auto-cage-delay", .5);
+		SmartDashboard::PutNumber("auto-pickup-delay", .5);
 		
 		AxisCamera& camera = AxisCamera::GetInstance("10.20.62.11");
 		camera.WriteBrightness(10);
@@ -50,14 +55,18 @@ public:
 		std::string choice = * (std::string*) autoChoose.GetSelected();		
 		bool right_hot = true;
 		autoSeq.clear();
+		AxisCamera& camera = AxisCamera::GetInstance("10.20.62.11");
+		camera.WriteBrightness(10);
 		if (choice == "Normal"){
-			WindupAction wind_action(shooter);
-			autoSeq.add_action(wind_action);
+//			WindupAction wind_action(shooter);
+//			autoSeq.add_action(wind_action);
 			DriveAction drive_action(drive, -SmartDashboard::GetNumber("auto-drive-speed"),
 					SmartDashboard::GetNumber("auto-drive-duration"));
 			autoSeq.add_action(drive_action);
-			OpenArms open_arms_action(shooter, pickup, cage);
-			autoSeq.add_action(open_arms_action);
+			CageAction cage_action (shooter, cage, -1, SmartDashboard::GetNumber("auto-cage-delay"));
+			autoSeq.add_action(cage_action);
+			PickupAction pickup_action (pickup, -1, SmartDashboard::GetNumber("auto-pickup-delay"));
+			autoSeq.add_action(pickup_action);
 			VisionWaitAction hot;
 			autoSeq.add_action(hot);
 			ShootAction fire_shot(shooter);
@@ -68,6 +77,7 @@ public:
 				Wait(0.05); // wait for a motor update time
 			}
 		} else if (choice == "Two-Ball"){
+			return;
 //			pickup down
 			PickupAction pickup_out_0(pickup, -1);
 			autoSeq.add_action(pickup_out_0);

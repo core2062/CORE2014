@@ -52,10 +52,10 @@ public:
 	ControlFlow call(void){
 		ControlFlow flow = WaitAction::call();
 		if (flow == CONTINUE){
-			if (direction = -1){
-				pickup->putUp();
+			if (direction == -1){
+				pickup->putDown();
 			}else{
-				pickup->putDown();			
+				pickup->putUp();			
 			}
 			return CONTINUE;
 		}else{
