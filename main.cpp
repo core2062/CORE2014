@@ -36,19 +36,7 @@ public:
 	void RobotInit() {
 		robot.robotInit();
 		
-		SmartDashboard::PutNumber("drive-duration", 2.5);
-		SmartDashboard::PutNumber("drive-tp-mid-duration", 2.5);
-		SmartDashboard::PutNumber("drive-speed", .6);
-		SmartDashboard::PutNumber("cage-delay", 0.2);
-		
-		SmartDashboard::PutBoolean("is-right", false);
-		SmartDashboard::PutBoolean("hot-debug", false);
-		
-		SmartDashboard::PutNumber("sonic-dist-min", 0);
-		SmartDashboard::PutNumber("sonic-dist-max", 5);
-		
-		SmartDashboard::PutBoolean("anti-defense", true);
-		SmartDashboard::PutBoolean("return-ultra-true", false); // DEBUG
+		SmartDashboard::PutBoolean("auto-hot-debug", false);
 		
 		autoChoose.AddDefault("Normal", new std::string("Normal"));
 		autoChoose.AddObject("Two-Ball", new std::string("Two-Ball"));

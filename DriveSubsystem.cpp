@@ -9,7 +9,9 @@ void DriveSubsystem::robotInit(void){
 	SmartDashboard::PutNumber("culver-radius-gain", 1.2);
 	SmartDashboard::PutNumber("culver-raw-gain", 1.5);
 	
-	sonic.SetAutomaticMode(true);
+	SmartDashboard::PutNumber("auto-drive-duration", .5);
+	SmartDashboard::PutNumber("auto-drive-speed", .6);
+//	sonic.SetAutomaticMode(true);
 }
 void DriveSubsystem::teleopInit(void){
 	drive.SetSafetyEnabled(false);
@@ -42,7 +44,7 @@ void DriveSubsystem::teleopInit(void){
 	driveChooser.AddDefault("ether", ether);
 	driveChooser.AddObject("culver", culver);
 	driveChooser.AddObject("tank", tank);
-	SmartDashboard::PutData("drive-chooser", &driveChooser);
+//	SmartDashboard::PutData("drive-chooser", &driveChooser);
 
 }
 
@@ -67,18 +69,18 @@ void DriveSubsystem::teleop(void){
 		quickturn = false;
 	}
 	
-	std::string choice = * (std::string*) driveChooser.GetSelected();
+//	std::string choice = * (std::string*) driveChooser.GetSelected();
 	
-	if(choice == "culver") {
-		drive.CulverDrive(deadband(robot.joystick.axis("mag")), deadband(robot.joystick.axis("steer-x")), 
-			deadband(robot.joystick.axis("steer-y")), quickturn, 
-			SmartDashboard::GetNumber("culver-radius-gain"), SmartDashboard::GetNumber("culver-raw-gain"));
-	} else if (choice == "tank") {
-		drive.TankDrive(deadband(robot.joystick.axis("left")), deadband(robot.joystick.axis("right")), true);
-	} else {
+//	if(choice == "culver") {
+//		drive.CulverDrive(deadband(robot.joystick.axis("mag")), deadband(robot.joystick.axis("steer-x")), 
+//			deadband(robot.joystick.axis("steer-y")), quickturn, 
+//			SmartDashboard::GetNumber("culver-radius-gain"), SmartDashboard::GetNumber("culver-raw-gain"));
+//	} else if (choice == "tank") {
+//		drive.TankDrive(deadband(robot.joystick.axis("left")), deadband(robot.joystick.axis("right")), true);
+//	} else {
 		drive.EtherArcade(deadband(robot.joystick.axis("mag")), deadband(robot.joystick.axis("kaj-rot")), 
 			SmartDashboard::GetNumber("ether-b"), SmartDashboard::GetNumber("ether-a"));
-	}
+//	}
 	
 	if (robot.joystick.button("shift")){
 		DoubleSolenoid::Value v = rightShift.Get();
@@ -91,15 +93,15 @@ void DriveSubsystem::teleop(void){
 		}
 	}
 	
-	SmartDashboard::PutNumber("sonic-dist", sonic.GetRangeInches());
+//	SmartDashboard::PutNumber("sonic-dist", sonic.GetRangeInches());
 }
 
 void DriveSubsystem::arcade_drive(float mag, float turn){
 	drive.ArcadeDrive(mag, turn, false);
 }
-double DriveSubsystem::getSonicDist(void){
-	return sonic.GetRangeInches();
-}
+//double DriveSubsystem::getSonicDist(void){
+//	return sonic.GetRangeInches();
+//}
 float DriveSubsystem::getRot(void){
 	return gyro.GetAngle();
 }

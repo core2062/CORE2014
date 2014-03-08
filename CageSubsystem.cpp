@@ -2,6 +2,7 @@
 
 void CageSubsystem::robotInit(void){
 	robot.requirePneumatics();
+	SmartDashboard::PutNumber("auto-cage-delay", 0.2);
 }
 void CageSubsystem::teleopInit(void){
 	robot.compressor->Start();

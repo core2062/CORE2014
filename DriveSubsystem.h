@@ -26,9 +26,9 @@ class DriveSubsystem : public CORESubsystem {
 	
 	SendableChooser driveChooser;
 	
-	DigitalOutput sonicOut;
-	DigitalInput sonicIn;
-	Ultrasonic sonic;
+//	DigitalOutput sonicOut;
+//	DigitalInput sonicIn;
+//	Ultrasonic sonic;
 	
 	Gyro gyro;
 public:
@@ -59,9 +59,9 @@ public:
 		
 		driveChooser(),
 		
-		sonicOut(8),
-		sonicIn(7),
-		sonic(sonicOut, sonicIn, Ultrasonic::kInches),
+//		sonicOut(8),
+//		sonicIn(7),
+//		sonic(sonicOut, sonicIn, Ultrasonic::kInches),
 		gyro(1)
 	{
 		drive.SetSafetyEnabled(false);
@@ -73,7 +73,7 @@ public:
 	
 	void resetDistance(void);
 	void arcade_drive (float mag, float turn);
-	double getSonicDist(void);
+//	double getSonicDist(void);
 	float getRot(void);
 	void resetRot(void);
 	
