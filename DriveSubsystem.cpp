@@ -27,6 +27,7 @@ void DriveSubsystem::teleopInit(void){
 	robot.joystick.register_button("quickturn", 1, 5, JoystickCache::RISING);
 	robot.joystick.register_axis("quickturn", 1, 3);
 	robot.joystick.register_button("shift", 1, 6, JoystickCache::RISING);
+	robot.joystick.register_button("shift2", 1, 5, JoystickCache::RISING);
 	
 //	SmartDashboard::PutNumber("culver-x", 0);
 //	SmartDashboard::PutNumber("culver-y", 0);
@@ -80,7 +81,7 @@ void DriveSubsystem::teleop(void){
 			SmartDashboard::GetNumber("ether-b"), SmartDashboard::GetNumber("ether-a"));
 //	}
 	
-	if (robot.joystick.button("shift")){
+	if (robot.joystick.button("shift") or robot.joystick.button("shift2")){
 		DoubleSolenoid::Value v = rightShift.Get();
 		if (v == DoubleSolenoid::kForward ){
 			rightShift.Set(DoubleSolenoid::kReverse);
