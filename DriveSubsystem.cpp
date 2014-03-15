@@ -6,6 +6,8 @@ void DriveSubsystem::robotInit(void){
 	SmartDashboard::PutNumber("ether-a", 1);
 	SmartDashboard::PutNumber("ether-b", 0);
 	
+	SmartDashboard::PutBoolean("drive-high-gear", false);
+	
 //	SmartDashboard::PutNumber("culver-radius-gain", 1.2);
 //	SmartDashboard::PutNumber("culver-raw-gain", 1.5);
 	
@@ -86,9 +88,11 @@ void DriveSubsystem::teleop(void){
 		if (v == DoubleSolenoid::kForward ){
 			rightShift.Set(DoubleSolenoid::kReverse);
 			leftShift.Set(DoubleSolenoid::kReverse);
+			SmartDashboard::PutBoolean("drive-high-gear", true);
 		} else {
 			rightShift.Set(DoubleSolenoid::kForward);
 			leftShift.Set(DoubleSolenoid::kForward);
+			SmartDashboard::PutBoolean("drive-high-gear", false);
 		}
 	}
 	
