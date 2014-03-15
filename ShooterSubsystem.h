@@ -43,10 +43,10 @@ class ShooterSubsystem : public CORESubsystem {
 	
 	Victor shooterWheel;
 	SensorEdge photo;
-	Timer shootTimer;
 	
 	bool armed;
 	bool unwound;
+	bool shooting;
 	
 public:
 	std::string name(void){
@@ -56,9 +56,9 @@ public:
 		CORESubsystem(robot),
 		shooterWheel(6),
 		photo(2),
-		shootTimer(),
 		armed(false),
-		unwound(false)
+		unwound(false),
+		shooting(false)
 	{
 	}
 	
@@ -66,7 +66,8 @@ public:
 	void teleopInit(void);
 	void teleop(void);
 	
-	bool getSwitch(void);
+	bool getSwitchRise(void);
+	bool getSwitchFall(void);
 	bool getSwitchRaw(void);
 	void setMotor(double speed);
 	bool isArmed(void);
@@ -102,7 +103,7 @@ public:
 		
 	}
 	ControlFlow call(void){
-		if(!shooter->getSwitch()){
+		if(!shooter->getSwitchRise()){
 			shooter->setMotor(SmartDashboard::GetNumber("choochoo-speed"));
 			return sync?CONTINUE:BACKGROUND;
 		} else {
@@ -114,26 +115,22 @@ public:
 };
 class ShootAction : public Action{
 	ShooterSubsystem* shooter;
-	Timer timer;
 public:
 	ShootAction(ShooterSubsystem& shooter):
-	shooter(&shooter),
-	timer()
+	shooter(&shooter)
 	{}
 	void init(void){
-		timer.Reset();
 	}
 	ControlFlow call(void){
+		SmartDashboard::PutBoolean("armed", shooter->isArmed());
+		SmartDashboard::PutBoolean("sensor", shooter->getSwitchRaw());
+		
 		if(!shooter->isArmed()){
 			return CONTINUE;
 		}
-		if (timer.Get() >= SmartDashboard::GetNumber("shoot-delay")){
-			timer.Stop();
+		if (!shooter->getSwitchRaw()){
 			shooter->setMotor(0);
 			return END;
-		}
-		if(timer.Get() == 0){
-			timer.Start();
 		}
 		shooter->setMotor(1);
 		return CONTINUE;

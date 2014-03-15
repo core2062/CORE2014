@@ -18,6 +18,7 @@ void ShooterSubsystem::teleopInit(void){
 	armed = photo.Get();
 }
 void ShooterSubsystem::teleop(void){
+	armed = photo.Get();
 	if (photo.Rise()){
 		if(shooterWheel.Get() > 0){
 			armed = true;
@@ -43,29 +44,29 @@ void ShooterSubsystem::teleop(void){
 	
 	if (robot.joystick.button("shoot") && armed){
 		output = 1;
-		shootTimer.Start();
-	} else if (shootTimer.Get() != 0){
+		shooting = true;
+	} else if (shooting){
 		output = 1;
 	}
-	if (shootTimer.Get() >= SmartDashboard::GetNumber("shoot-delay")){
-		shootTimer.Stop();
-		shootTimer.Reset();
+	if (!photo.Get() && shooting){
 		output = 0;
 		armed = false;
+		shooting = false;
 	}
-//	cout << "timer: " << shootTimer.Get() << " armed: " << armed << endl;
 	if(robot.joystick.button("unwind") && !unwound){
-		shootTimer.Stop();
-		shootTimer.Reset();
 		output = -0.5;
 		armed = false;
 	}
 	SmartDashboard::PutBoolean("armed", armed);
 	SmartDashboard::PutBoolean("sensor", photo.Get());
+	SmartDashboard::PutBoolean("shooting", shooting);
 	shooterWheel.Set(speed*output);
 }
-bool ShooterSubsystem::getSwitch(void){
+bool ShooterSubsystem::getSwitchRise(void){
 	return photo.Rise();
+}
+bool ShooterSubsystem::getSwitchFall(void){
+	return photo.Fall();
 }
 bool ShooterSubsystem::getSwitchRaw(void){
 	return photo.Get();
@@ -79,3 +80,4 @@ bool ShooterSubsystem::isArmed(void){
 void ShooterSubsystem::setArmed(bool value){
 	armed = value;
 }
+
