@@ -59,7 +59,6 @@ void ShooterSubsystem::teleop(void){
 	}
 	SmartDashboard::PutBoolean("armed", armed);
 	SmartDashboard::PutBoolean("sensor", photo.Get());
-	SmartDashboard::PutBoolean("shooting", shooting);
 	shooterWheel.Set(speed*output);
 }
 bool ShooterSubsystem::getSwitchRise(void){
