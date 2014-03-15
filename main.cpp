@@ -47,13 +47,15 @@ public:
 		autoChoose.AddObject("2 Ball 2 Hot", new std::string("two-hot"));
 		SmartDashboard::PutData("auto-chooser", &autoChoose);
 
-		SmartDashboard::PutNumber("auto-drive-duration", 0);
+		SmartDashboard::PutNumber("auto-drive-duration", .5);
 		SmartDashboard::PutNumber("auto-drive-speed", .6);
 		SmartDashboard::PutNumber("auto-cage-delay", .5);
 		SmartDashboard::PutNumber("auto-pickup-delay", .5);
-		SmartDashboard::PutNumber("auto-drive-after-duration", .6);
+		SmartDashboard::PutNumber("auto-drive-after-duration", 1);
 		SmartDashboard::PutNumber("auto-roller-1", .5);
 		SmartDashboard::PutNumber("auto-roller-2", 1.5);
+		SmartDashboard::PutNumber("auto-wait-for-windup", 2);
+		SmartDashboard::PutNumber("auto-drive-while", 2);
 		
 		AxisCamera& camera = AxisCamera::GetInstance("10.20.62.11");
 		camera.WriteBrightness(10);
@@ -69,18 +71,16 @@ public:
 		if (choice == "one-ball"){
 //			WindupAction wind_action(shooter);
 //			autoSeq.add_action(wind_action);
-//			DriveAction drive_action(drive, -SmartDashboard::GetNumber("auto-drive-speed"),
-//					SmartDashboard::GetNumber("auto-drive-duration"));
-//			autoSeq.add_action(drive_action);
-			CageAction cage_action (cage, -1, SmartDashboard::GetNumber("auto-cage-delay"));
+//			
+			CageAction cage_action (cage, 1, SmartDashboard::GetNumber("auto-cage-delay"));
 			autoSeq.add_action(cage_action);
-			PickupAction pickup_action (pickup, -1, SmartDashboard::GetNumber("auto-pickup-delay"));
+			PickupAction pickup_action (pickup, 1, SmartDashboard::GetNumber("auto-pickup-delay"));
 			autoSeq.add_action(pickup_action);
 			VisionWaitAction hot;
 			autoSeq.add_action(hot);
 			ShootAction fire_shot(shooter);
 			autoSeq.add_action(fire_shot);
-			WaitAction wait_before_drive(1);
+			WaitAction wait_before_drive(.5);
 			autoSeq.add_action(wait_before_drive);
 			DriveAction drive_after(drive, -SmartDashboard::GetNumber("auto-drive-speed"),
 								SmartDashboard::GetNumber("auto-drive-after-duration"));
@@ -94,21 +94,28 @@ public:
 				Wait(0.05); // wait for a motor update time
 			}
 		} else if (choice == "two-ball"){
-			PickupAction pickup_out(pickup, -1, SmartDashboard::GetNumber("auto-pickup-delay"));
+			PickupAction pickup_out(pickup, 1, SmartDashboard::GetNumber("auto-pickup-delay"));
 			autoSeq.add_action(pickup_out);
-			CageAction cage_out(cage, -1, SmartDashboard::GetNumber("auto-cage-delay"));
+			DriveAction drive_action(drive, -SmartDashboard::GetNumber("auto-drive-speed"),
+					SmartDashboard::GetNumber("auto-drive-duration"));
+			autoSeq.add_action(drive_action);
+			CageAction cage_out(cage, 1, SmartDashboard::GetNumber("auto-cage-delay"));
 			autoSeq.add_action(cage_out);
 			ShootAction shoot(shooter);
 			autoSeq.add_action(shoot);
 			RollerIn intake_in(pickup);
 			autoSeq.add_action(intake_in);
-			WindupAction windup(shooter);
+			WindupAction windup(shooter, false);
 			autoSeq.add_action(windup);
-			RollerAction roller_in(pickup, -1, SmartDashboard::GetNumber("auto-roller-1"));
-			autoSeq.add_action(roller_in);
-			PickupRollerAction pickup_in(pickup, 1, SmartDashboard::GetNumber("auto-roller-2"));
+			DriveAction drive_while_windup(drive, -SmartDashboard::GetNumber("auto-drive-speed"), SmartDashboard::GetNumber("auto-drive-while"));
+			autoSeq.add_action(drive_while_windup);
+			WaitAction wait_for_windup(SmartDashboard::GetNumber("auto-wait-for-windup"));
+			autoSeq.add_action(wait_for_windup);
+//			RollerAction roller_in(pickup, -1, SmartDashboard::GetNumber("auto-roller-1"));
+//			autoSeq.add_action(roller_in);
+			PickupRollerAction pickup_in(pickup, -1, SmartDashboard::GetNumber("auto-roller-2"));
 			autoSeq.add_action(pickup_in);
-			PickupAction pickup_out1(pickup, -1, .5);
+			PickupAction pickup_out1(pickup, 1, .5);
 			autoSeq.add_action(pickup_out1);
 			WaitMidpointAction mid;
 			autoSeq.add_action(mid);
@@ -142,8 +149,11 @@ public:
 			VisionAction vision_action (&right_hot);
 			autoSeq.add_action(vision_action);
 //			pickup down
-//			PickupAction pickup_out_0(pickup, -1);
-//			autoSeq.add_action(pickup_out_0);
+			PickupAction pickup_out_0(pickup, -1);
+			autoSeq.add_action(pickup_out_0);
+			DriveAction drive_action(drive, -SmartDashboard::GetNumber("auto-drive-speed"),
+					SmartDashboard::GetNumber("auto-drive-duration"));
+			autoSeq.add_action(drive_action);
 			CageAction cage_out(cage, -1, .5);
 			autoSeq.add_action(cage_out);
 //			turn left if not hot
@@ -158,7 +168,7 @@ public:
 			ShootAction first_shot (shooter);
 			autoSeq.add_action(first_shot);
 //			wind up for second shot
-			WindupAction windup_2(shooter);
+			WindupAction windup_2(shooter, false);
 			autoSeq.add_action(windup_2);
 //			intake roller .75 sec in
 			RollerAction roller_in_2 (pickup, -1, 1.5);

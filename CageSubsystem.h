@@ -90,7 +90,7 @@ public:
 		if(timer.Get() == 0){
 			timer.Start();
 		}
-		if (direction < 0){
+		if (direction > 0){
 			cage->cylinderOut();
 		} else {
 			cage->cylinderIn();

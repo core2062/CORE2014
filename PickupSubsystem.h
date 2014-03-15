@@ -53,7 +53,7 @@ public:
 		ControlFlow flow = WaitAction::call();
 		if (flow == CONTINUE) {
 			cout << "pickup interate" << endl;
-			if (direction < 0) {
+			if (direction > 0) {
 				pickup->putDown();
 			} else {
 				pickup->putUp();			
@@ -71,10 +71,10 @@ class RollerAction : public WaitAction{
 	PickupSubsystem* pickup;
 	int direction;
 public:
-	RollerAction (PickupSubsystem& pickup, int dir, double duration):
+	RollerAction (PickupSubsystem& pickup, int direction, double duration):
 		WaitAction(duration),
 		pickup(&pickup),
-		direction(dir)
+		direction(direction)
 	{	}
 	
 	void init(void){
@@ -83,7 +83,7 @@ public:
 	ControlFlow call(void){
 		ControlFlow flow = WaitAction::call();
 		if (flow == CONTINUE){
-			pickup->intake(direction);
+			pickup->intake(-1);
 			return CONTINUE;
 		} else {
 			pickup->intake(0);
@@ -110,7 +110,7 @@ public:
 	ControlFlow call(void){
 		if (pickupTimer.Get() < duration){
 			pickup->intake(direction);
-			if (direction < 0){
+			if (direction > 0){
 				pickup->putDown();
 			} else {
 				pickup->putUp();			
