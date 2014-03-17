@@ -67,24 +67,26 @@ public:
 		shooter.setArmed(shooter.getSwitchRaw());
 		autoSeq.clear();
 		
+		bool right_hot = true;
+		
 		cout << "Auto mode: " <<choice << endl;
 		if (choice == "one-ball"){
 //			WindupAction wind_action(shooter);
 //			autoSeq.add_action(wind_action);
-//			
-			CageAction cage_action (cage, 1, SmartDashboard::GetNumber("auto-cage-delay"));
-			autoSeq.add_action(cage_action);
+			
+			VisionAction hot (&right_hot);
+			autoSeq.add_action(hot);
+			DriveAction drive_after(drive, -SmartDashboard::GetNumber("auto-drive-speed"),
+				SmartDashboard::GetNumber("auto-drive-after-duration"));
+			autoSeq.add_action(drive_after);
 			PickupAction pickup_action (pickup, 1, SmartDashboard::GetNumber("auto-pickup-delay"));
 			autoSeq.add_action(pickup_action);
-			VisionWaitAction hot;
-			autoSeq.add_action(hot);
+			CageAction cage_action (cage, 1, SmartDashboard::GetNumber("auto-cage-delay"));
+			autoSeq.add_action(cage_action);
+			WaitIfAction wait_if_hot(&right_hot);
+			autoSeq.add_action(wait_if_hot);
 			ShootAction fire_shot(shooter);
 			autoSeq.add_action(fire_shot);
-			WaitAction wait_before_drive(.5);
-			autoSeq.add_action(wait_before_drive);
-			DriveAction drive_after(drive, -SmartDashboard::GetNumber("auto-drive-speed"),
-								SmartDashboard::GetNumber("auto-drive-after-duration"));
-			autoSeq.add_action(drive_after);
 
 			autoSeq.init();
 			wd.Feed();
@@ -128,7 +130,6 @@ public:
 				Wait(0.05); // wait for a motor update time
 			}
 		} else if (choice == "two-hot"){
-			bool right_hot = true;
 //			pickup down
 //			PickupAction pickup_out_0(pickup, -1);
 //			autoSeq.add_action(pickup_out_0);

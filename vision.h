@@ -53,6 +53,7 @@ namespace CORE{
 		}
 		virtual ~VisionWaitAction(void){};
 	};
+	
 	class WaitMidpointAction : public Action{
 		DriverStation* ds;
 	public:
@@ -62,6 +63,28 @@ namespace CORE{
 		void init(void){
 		}
 		virtual ControlFlow call(void){
+			if(ds->GetMatchTime() < 5 ){
+				return CONTINUE;
+			}
+			return END;
+		}
+	};
+	
+	class WaitIfAction : public Action{
+		bool* flag;
+		DriverStation* ds;
+	public:
+		WaitIfAction(bool* flag):
+			flag(flag)
+		{
+			ds = DriverStation::GetInstance();
+		}
+		void init(void){
+		}
+		virtual ControlFlow call(void){
+			if(!flag){
+				return END;
+			}
 			if(ds->GetMatchTime() < 5 ){
 				return CONTINUE;
 			}
