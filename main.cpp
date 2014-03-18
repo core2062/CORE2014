@@ -47,15 +47,15 @@ public:
 		autoChoose.AddObject("2 Ball 2 Hot", new std::string("two-hot"));
 		SmartDashboard::PutData("auto-chooser", &autoChoose);
 
-		SmartDashboard::PutNumber("auto-drive-duration", .5);
+		SmartDashboard::PutNumber("auto-drive-duration", 1.25);
 		SmartDashboard::PutNumber("auto-drive-speed", .6);
 		SmartDashboard::PutNumber("auto-cage-delay", .5);
 		SmartDashboard::PutNumber("auto-pickup-delay", .5);
 		SmartDashboard::PutNumber("auto-drive-after-duration", 1);
 		SmartDashboard::PutNumber("auto-roller-1", .5);
 		SmartDashboard::PutNumber("auto-roller-2", 1.5);
-		SmartDashboard::PutNumber("auto-wait-for-windup", 2);
-		SmartDashboard::PutNumber("auto-drive-while", 2);
+		SmartDashboard::PutNumber("auto-wait-for-windup", 4);
+		SmartDashboard::PutNumber("auto-drive-while", 0);
 		
 		AxisCamera& camera = AxisCamera::GetInstance("10.20.62.11");
 		camera.WriteBrightness(10);

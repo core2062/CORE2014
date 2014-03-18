@@ -2,7 +2,7 @@
 
 void ShooterSubsystem::robotInit(void){
 	SmartDashboard::PutNumber("shoot-delay", .5);
-	SmartDashboard::PutNumber("choochoo-speed", .7);
+	SmartDashboard::PutNumber("choochoo-speed", .8);
 	SmartDashboard::PutBoolean("armed", false);
 }
 void ShooterSubsystem::teleopInit(void){
