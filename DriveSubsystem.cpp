@@ -6,7 +6,7 @@ void DriveSubsystem::robotInit(void){
 	SmartDashboard::PutNumber("ether-a", 1);
 	SmartDashboard::PutNumber("ether-b", 0);
 	
-	SmartDashboard::PutBoolean("drive-high-gear", false);
+	SmartDashboard::PutBoolean("drive-high-gear", true);
 	
 //	SmartDashboard::PutNumber("culver-radius-gain", 1.2);
 //	SmartDashboard::PutNumber("culver-raw-gain", 1.5);
