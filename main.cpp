@@ -53,8 +53,8 @@ public:
 		SmartDashboard::PutNumber("auto-pickup-delay", .5);
 		SmartDashboard::PutNumber("auto-drive-after-duration", 1);
 		SmartDashboard::PutNumber("auto-roller-1", .5);
-		SmartDashboard::PutNumber("auto-roller-2", 1.5);
-		SmartDashboard::PutNumber("auto-wait-for-windup", 4);
+		SmartDashboard::PutNumber("auto-roller-2", 1);
+		SmartDashboard::PutNumber("auto-wait-for-windup", 3.9);
 		SmartDashboard::PutNumber("auto-drive-while", 0);
 		
 		AxisCamera& camera = AxisCamera::GetInstance("10.20.62.11");
