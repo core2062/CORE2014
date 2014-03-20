@@ -8,16 +8,16 @@ void PickupSubsystem::robotInit(void){
 void PickupSubsystem::teleopInit(void){
 	robot.compressor->Start();
 	
-	if (SmartDashboard::GetBoolean("alt-operator-config")){
+//	if (SmartDashboard::GetBoolean("alt-operator-config")){
 		robot.joystick.register_axis("roller-axis", 2, 2);
 		robot.joystick.register_button("pickup-toggle", 2, 5, JoystickCache::RISING);
-	}else{
-		robot.joystick.register_button("pickup-out", 2, 7, JoystickCache::RISING);
-		robot.joystick.register_button("pickup-in", 2, 8, JoystickCache::RISING);
-		robot.joystick.register_button("roller-in", 2, 3);
-		robot.joystick.register_button("roller-out", 2, 5);
-		robot.joystick.register_button("pickup-toggle", 2, 11, JoystickCache::RISING);	
-	}
+//	}else{
+//		robot.joystick.register_button("pickup-out", 2, 7, JoystickCache::RISING);
+//		robot.joystick.register_button("pickup-in", 2, 8, JoystickCache::RISING);
+//		robot.joystick.register_button("roller-in", 2, 3);
+//		robot.joystick.register_button("roller-out", 2, 5);
+//		robot.joystick.register_button("pickup-toggle", 2, 11, JoystickCache::RISING);	
+//	}
 	
 
 
