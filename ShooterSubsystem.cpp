@@ -68,12 +68,14 @@ bool ShooterSubsystem::getSwitchFall(void){
 	return photo.Fall();
 }
 bool ShooterSubsystem::getSwitchRaw(void){
+	SmartDashboard::PutBoolean("sensor", photo.Get());
 	return photo.Get();
 }
 void ShooterSubsystem::setMotor(double speed){
 	shooterWheel.Set(speed*SmartDashboard::GetNumber("choochoo-speed"));
 }
 bool ShooterSubsystem::isArmed(void){
+	SmartDashboard::PutBoolean("armed", armed);
 	return armed;
 }
 void ShooterSubsystem::setArmed(bool value){

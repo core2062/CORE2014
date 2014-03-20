@@ -47,14 +47,14 @@ public:
 		autoChoose.AddObject("2 Ball 2 Hot", new std::string("two-hot"));
 		SmartDashboard::PutData("auto-chooser", &autoChoose);
 
-		SmartDashboard::PutNumber("auto-drive-duration", 1.25);
+		SmartDashboard::PutNumber("auto-drive-duration", 1.35);
 		SmartDashboard::PutNumber("auto-drive-speed", .6);
-		SmartDashboard::PutNumber("auto-cage-delay", .5);
-		SmartDashboard::PutNumber("auto-pickup-delay", .5);
+		SmartDashboard::PutNumber("auto-cage-delay", .4);
+		SmartDashboard::PutNumber("auto-pickup-delay", .4);
 		SmartDashboard::PutNumber("auto-drive-after-duration", 1);
 		SmartDashboard::PutNumber("auto-roller-1", .5);
 		SmartDashboard::PutNumber("auto-roller-2", 1);
-		SmartDashboard::PutNumber("auto-wait-for-windup", 3.9);
+		SmartDashboard::PutNumber("auto-wait-for-windup", 3.7);
 		SmartDashboard::PutNumber("auto-drive-while", 0);
 		
 		AxisCamera& camera = AxisCamera::GetInstance("10.20.62.11");
@@ -66,14 +66,13 @@ public:
 		std::string choice = * (std::string*) autoChoose.GetSelected();		
 		shooter.setArmed(shooter.getSwitchRaw());
 		autoSeq.clear();
-		
+		cout << "auto init armed --> " << shooter.isArmed() <<endl; 
 		bool right_hot = true;
 		
 		cout << "Auto mode: " <<choice << endl;
 		if (choice == "one-ball"){
-//			WindupAction wind_action(shooter);
-//			autoSeq.add_action(wind_action);
-			
+			WindupAction wind_action(shooter);
+			autoSeq.add_action(wind_action);
 			VisionAction hot (&right_hot);
 			autoSeq.add_action(hot);
 			DriveAction drive_after(drive, -SmartDashboard::GetNumber("auto-drive-speed"),
@@ -95,7 +94,9 @@ public:
 				wd.Feed();
 				Wait(0.05); // wait for a motor update time
 			}
-		} else if (choice == "two-ball"){
+		} else if (choice == "two-ball" || choice == "two-hot"){
+			WindupAction wind_action(shooter);
+			autoSeq.add_action(wind_action);
 			PickupAction pickup_out(pickup, 1, SmartDashboard::GetNumber("auto-pickup-delay"));
 			autoSeq.add_action(pickup_out);
 			DriveAction drive_action(drive, -SmartDashboard::GetNumber("auto-drive-speed"),

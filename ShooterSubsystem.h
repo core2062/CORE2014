@@ -103,7 +103,8 @@ public:
 		
 	}
 	ControlFlow call(void){
-		if(!shooter->getSwitchRise()){
+		cout << "windup: " << shooter->isArmed() << " : " << shooter->getSwitchRaw() << endl;
+		if(!shooter->getSwitchRise() and !shooter->isArmed()){
 			shooter->setMotor(SmartDashboard::GetNumber("choochoo-speed"));
 			return sync?CONTINUE:BACKGROUND;
 		} else {
@@ -122,14 +123,13 @@ public:
 	void init(void){
 	}
 	ControlFlow call(void){
-		SmartDashboard::PutBoolean("armed", shooter->isArmed());
-		SmartDashboard::PutBoolean("sensor", shooter->getSwitchRaw());
-		
+		cout << "shoot: " << shooter->isArmed() << " : " << shooter->getSwitchRaw() << endl;		
 		if(!shooter->isArmed()){
 			return CONTINUE;
 		}
 		if (!shooter->getSwitchRaw()){
 			shooter->setMotor(0);
+			shooter->setArmed(false);
 			return END;
 		}
 		shooter->setMotor(1);

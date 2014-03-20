@@ -15,7 +15,7 @@ PixelValue pixVal(unsigned int r, unsigned int g, unsigned int b, unsigned int a
 #define log(im) {cout<<"writing "<<step<<endl; (im).Write(("/."+step+".bmp").c_str());}
 	
 	bool CORE::visionMain() {
-		double minArea = 500;
+		double minArea = 250;
 		double minThreshold = 2;
 		bool horizontal = false;
 		bool vertical = false;
