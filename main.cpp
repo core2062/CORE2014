@@ -221,7 +221,7 @@ public:
 		while (IsOperatorControl() && !IsDisabled()) {
 			wd.Feed();
 			SmartDashboard::PutBoolean("compressor-running",
-					!robot.compressor->GetPressureSwitchValue());
+					robot.compressor->GetPressureSwitchValue());
 			robot.teleop();
 			Wait(0.005); // wait for a motor update time
 		}
