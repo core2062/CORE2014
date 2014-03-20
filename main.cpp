@@ -40,7 +40,7 @@ public:
 		robot.robotInit();
 		
 		SmartDashboard::PutBoolean("auto-hot-debug", false);
-//		SmartDashboard::PutBoolean("alt-operator-config", true);
+		SmartDashboard::PutBoolean("alt-operator-config", true);
 		
 		autoChoose.AddDefault("1 Ball", new std::string("one-ball"));
 		autoChoose.AddObject("2 Ball", new std::string("two-ball"));

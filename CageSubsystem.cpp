@@ -5,11 +5,11 @@ void CageSubsystem::robotInit(void){
 }
 void CageSubsystem::teleopInit(void){
 	robot.compressor->Start();
-//	if (SmartDashboard::GetBoolean("alt-operator-config")){
+	if (SmartDashboard::GetBoolean("alt-operator-config")){
 		robot.joystick.register_button("toggle", 2, 6, JoystickCache::RISING);
-//	}else{
-//		robot.joystick.register_button("toggle", 2 ,12, JoystickCache::RISING);
-//	}
+	}else{
+		robot.joystick.register_button("toggle", 2 ,12, JoystickCache::RISING);
+	}
 }
 void CageSubsystem::teleop(void){
 	 if (robot.joystick.button("toggle")){
