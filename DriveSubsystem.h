@@ -71,6 +71,8 @@ public:
 	void teleopInit(void);
 	void teleop(void);
 	
+	void autoInit(void);
+	
 	void resetDistance(void);
 	void arcade_drive (float mag, float turn);
 //	double getSonicDist(void);
