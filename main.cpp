@@ -47,7 +47,7 @@ public:
 		autoChoose.AddObject("2 Ball 2 Hot", new std::string("two-hot"));
 		SmartDashboard::PutData("auto-chooser", &autoChoose);
 
-		SmartDashboard::PutNumber("auto-drive-duration", 1.45);
+		SmartDashboard::PutNumber("auto-drive-duration", 1.35);
 		SmartDashboard::PutNumber("auto-drive-speed", .6);
 		SmartDashboard::PutNumber("auto-cage-delay", .4);
 		SmartDashboard::PutNumber("auto-pickup-delay", .4);
@@ -68,8 +68,6 @@ public:
 		autoSeq.clear();
 		cout << "auto init armed --> " << shooter.isArmed() <<endl; 
 		bool right_hot = true;
-		
-		drive.autoInit();
 		
 		cout << "Auto mode: " <<choice << endl;
 		if (choice == "one-ball"){
