@@ -97,6 +97,7 @@ void DriveSubsystem::teleop(void){
 	}
 	
 //	SmartDashboard::PutNumber("sonic-dist", sonic.GetRangeInches());
+	float thing = getDistance();
 }
 
 void DriveSubsystem::arcade_drive(float mag, float turn){
@@ -110,4 +111,11 @@ float DriveSubsystem::getRot(void){
 }
 void DriveSubsystem::resetRot(void){
 	gyro.Reset();
+}
+float DriveSubsystem::getDistance(void){
+	float volt = ultra.GetVoltage();
+	SmartDashboard::PutNumber("ultra-raw", volt);
+	float dist = volt / 1024;
+	SmartDashboard::PutNumber("ultra-dist in CM", dist);
+	return dist;
 }

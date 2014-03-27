@@ -31,6 +31,7 @@ class DriveSubsystem : public CORESubsystem {
 //	Ultrasonic sonic;
 	
 	Gyro gyro;
+	AnalogChannel ultra;
 public:
 	std::string name(void){
 		return "drive";
@@ -62,7 +63,8 @@ public:
 //		sonicOut(8),
 //		sonicIn(7),
 //		sonic(sonicOut, sonicIn, Ultrasonic::kInches),
-		gyro(1)
+		gyro(1),
+		ultra(1,2)
 	{
 		drive.SetSafetyEnabled(false);
 	}
@@ -76,6 +78,7 @@ public:
 //	double getSonicDist(void);
 	float getRot(void);
 	void resetRot(void);
+	float getDistance(void);
 	
 };
 //class DriveDistAction : public Action{
