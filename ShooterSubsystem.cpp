@@ -15,7 +15,6 @@ void ShooterSubsystem::teleopInit(void){
 		robot.joystick.register_button("arm", 2, 4);
 		robot.joystick.register_button("unwind", 2 ,6);
 	}
-	armed = photo.Get();
 }
 void ShooterSubsystem::teleop(void){
 	if (state == ARMED){
@@ -82,10 +81,12 @@ void ShooterSubsystem::setMotor(double speed){
 	shooterWheel.Set(speed*SmartDashboard::GetNumber("choochoo-speed"));
 }
 bool ShooterSubsystem::isArmed(void){
-	SmartDashboard::PutBoolean("armed", armed);
-	return armed;
+	bool flag = state == ARMED;
+	SmartDashboard::PutBoolean("armed", flag);
+	return flag;
 }
 void ShooterSubsystem::setArmed(bool value){
-	armed = value;
+	SmartDashboard::PutBoolean("armed", value);
+	armed = value ? ARMED : IDLE;
 }
 

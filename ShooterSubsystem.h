@@ -55,6 +55,7 @@ class ShooterSubsystem : public CORESubsystem {
 	Timer shootTimer;
 	
 	double output;
+	bool armed;
 	
 	ShooterState state;
 	
@@ -125,18 +126,22 @@ public:
 };
 class ShootAction : public Action{
 	ShooterSubsystem* shooter;
+	Timer timer;
 public:
 	ShootAction(ShooterSubsystem& shooter):
-	shooter(&shooter)
+	shooter(&shooter),
+	timer()
 	{}
 	void init(void){
+		timer.Reset();
+		timer.Start();
 	}
 	ControlFlow call(void){
 		cout << "shoot: " << shooter->isArmed() << " : " << shooter->getSwitchRaw() << endl;		
 		if(!shooter->isArmed()){
 			return CONTINUE;
 		}
-		if (!shooter->getSwitchRaw()){
+		if (timer.Get()>SmartDashboard::GetNumber("shoot-delay")){
 			shooter->setMotor(0);
 			shooter->setArmed(false);
 			return END;
