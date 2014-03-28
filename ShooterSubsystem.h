@@ -39,14 +39,24 @@ public:
 //	}
 };
 
+enum ShooterState {
+	ARMED,
+	FIRING,
+	IDLE,
+	LOADING,
+	UNWIND,
+	UNWOUND	
+};
+
 class ShooterSubsystem : public CORESubsystem {
 	
 	Victor shooterWheel;
 	SensorEdge photo;
+	Timer shootTimer;
 	
-	bool armed;
-	bool unwound;
-	bool shooting;
+	double output;
+	
+	ShooterState state;
 	
 public:
 	std::string name(void){
@@ -56,10 +66,9 @@ public:
 		CORESubsystem(robot),
 		shooterWheel(6),
 		photo(2),
-		armed(false),
-		unwound(false),
-		shooting(false)
+		output(0)
 	{
+		state = ARMED;
 	}
 	
 	void robotInit(void);

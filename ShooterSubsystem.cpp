@@ -1,7 +1,7 @@
 #include "ShooterSubsystem.h"
 
 void ShooterSubsystem::robotInit(void){
-	SmartDashboard::PutNumber("shoot-delay", .5);
+	SmartDashboard::PutNumber("shoot-delay", 1);
 	SmartDashboard::PutNumber("choochoo-speed", .8);
 	SmartDashboard::PutBoolean("armed", false);
 }
@@ -18,47 +18,54 @@ void ShooterSubsystem::teleopInit(void){
 	armed = photo.Get();
 }
 void ShooterSubsystem::teleop(void){
-	armed = photo.Get();
-	if (photo.Rise()){
-		if(shooterWheel.Get() > 0){
-			armed = true;
-		} else {
-			unwound = true;
-		}
-	} else if (photo.Fall()){
-		if(unwound) { 
-			unwound = false;
-		}
-	}
-	
-	double output = 0;
-	double speed = SmartDashboard::GetNumber("choochoo-speed");
-	
-	if (robot.joystick.button("arm")){
-		if (!armed){
-			output = 1;
-		}else{
-			output = 0;
-		}
-	}
-	
-	if (robot.joystick.button("shoot") && armed){
-		output = 1;
-		shooting = true;
-	} else if (shooting){
-		output = 1;
-	}
-	if (!photo.Get() && shooting){
+	if (state == ARMED){
 		output = 0;
-		armed = false;
-		shooting = false;
+		if (robot.joystick.button("shoot")){
+			state = FIRING;
+			shootTimer.Reset();
+			shootTimer.Start();
+		}else if (robot.joystick.button("unwind")){
+			state = UNWIND;
+		}
+		
+		
+	}else if (state == FIRING){
+		output = 1;
+		if (shootTimer.Get()>=SmartDashboard::GetNumber("shoot-delay")){
+			shootTimer.Stop();
+			shootTimer.Reset();
+			output = 0;
+			state = IDLE;
+		}
+	}else if (state == IDLE){
+		output = 0;
+		if (robot.joystick.button("arm")){
+			state = LOADING;
+		} else if (robot.joystick.button("unwind")){
+			state = UNWIND;
+		}
+	}else if (state == LOADING){
+		output = 1;
+		if (photo.Rise()){
+			state = ARMED;
+		} else if (!robot.joystick.button("arm")){
+			state = IDLE;
+		}
+	}else if (state == UNWIND){
+		output = -.5;
+		if (!robot.joystick.button("unwind")){
+			state = IDLE;
+		} else if (photo.Rise()){
+			state = UNWOUND;
+		}
+	}else if (state == UNWOUND){
+		output = 0;
+		if (robot.joystick.button("arm"))
+			state = LOADING;
 	}
-	if(robot.joystick.button("unwind") && !unwound){
-		output = -0.5;
-		armed = false;
-	}
-	SmartDashboard::PutBoolean("armed", armed);
-	SmartDashboard::PutBoolean("sensor", photo.Get());
+
+	cout << state << endl;
+	double speed = SmartDashboard::GetNumber("choochoo-speed");
 	shooterWheel.Set(speed*output);
 }
 bool ShooterSubsystem::getSwitchRise(void){
