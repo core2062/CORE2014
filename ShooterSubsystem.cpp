@@ -66,6 +66,8 @@ void ShooterSubsystem::teleop(void){
 	cout << state << endl;
 	double speed = SmartDashboard::GetNumber("choochoo-speed");
 	shooterWheel.Set(speed*output);
+	SmartDashboard::PutBoolean("armed", state == ARMED);
+	SmartDashboard::PutBoolean("sensor", photo.Get());
 }
 bool ShooterSubsystem::getSwitchRise(void){
 	return photo.Rise();

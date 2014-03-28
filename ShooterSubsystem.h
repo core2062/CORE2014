@@ -110,11 +110,11 @@ public:
 		
 	}
 	void init(void){
-		
+		cout << "windup start" << endl;
 	}
 	ControlFlow call(void){
 		cout << "windup: " << shooter->isArmed() << " : " << shooter->getSwitchRaw() << endl;
-		if(!shooter->getSwitchRise() and !shooter->isArmed()){
+		if(!shooter->getSwitchRaw()){
 			shooter->setMotor(SmartDashboard::GetNumber("choochoo-speed"));
 			return sync?CONTINUE:BACKGROUND;
 		} else {
