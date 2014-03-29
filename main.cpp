@@ -56,6 +56,10 @@ public:
 		SmartDashboard::PutNumber("auto-roller-2", 1);
 		SmartDashboard::PutNumber("auto-wait-for-windup", 3.7);
 		SmartDashboard::PutNumber("auto-drive-while", 0);
+		SmartDashboard::PutNumber("ultra-volt-in", 5.0);
+		
+		SmartDashboard::PutNumber("one-ball-drive-dist", 96);
+		SmartDashboard::PutNumber("two-ball-drive-dist", 96);
 		
 		AxisCamera& camera = AxisCamera::GetInstance("10.20.62.11");
 		camera.WriteBrightness(10);
@@ -75,8 +79,8 @@ public:
 			autoSeq.add_action(wind_action);
 			VisionAction hot (&right_hot);
 			autoSeq.add_action(hot);
-			DriveAction drive_after(drive, -SmartDashboard::GetNumber("auto-drive-speed"),
-				SmartDashboard::GetNumber("auto-drive-after-duration"));
+			DriveActionUltra drive_after(drive, -SmartDashboard::GetNumber("auto-drive-speed"),
+				SmartDashboard::GetNumber("one-ball-drive-dist"));
 			autoSeq.add_action(drive_after);
 			PickupAction pickup_action (pickup, 1, SmartDashboard::GetNumber("auto-pickup-delay"));
 			autoSeq.add_action(pickup_action);
@@ -100,7 +104,7 @@ public:
 			PickupAction pickup_out(pickup, 1, SmartDashboard::GetNumber("auto-pickup-delay"));
 			autoSeq.add_action(pickup_out);
 			DriveAction drive_action(drive, -SmartDashboard::GetNumber("auto-drive-speed"),
-					SmartDashboard::GetNumber("auto-drive-duration"));
+					SmartDashboard::GetNumber("two-ball-drive-dist"));
 			autoSeq.add_action(drive_action);
 			CageAction cage_out(cage, 1, SmartDashboard::GetNumber("auto-cage-delay"));
 			autoSeq.add_action(cage_out);
