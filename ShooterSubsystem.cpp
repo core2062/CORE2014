@@ -2,7 +2,7 @@
 
 void ShooterSubsystem::robotInit(void){
 	SmartDashboard::PutNumber("shoot-delay", 1);
-	SmartDashboard::PutNumber("choochoo-speed", .8);
+	SmartDashboard::PutNumber("choochoo-speed", 1);
 	SmartDashboard::PutBoolean("armed", false);
 }
 void ShooterSubsystem::teleopInit(void){
@@ -63,7 +63,7 @@ void ShooterSubsystem::teleop(void){
 			state = LOADING;
 	}
 
-	cout << state << endl;
+//	cout << state << endl;
 	double speed = SmartDashboard::GetNumber("choochoo-speed");
 	shooterWheel.Set(speed*output);
 	SmartDashboard::PutBoolean("armed", state == ARMED);

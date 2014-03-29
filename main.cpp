@@ -51,10 +51,10 @@ public:
 		SmartDashboard::PutNumber("auto-drive-speed", .6);
 		SmartDashboard::PutNumber("auto-cage-delay", .4);
 		SmartDashboard::PutNumber("auto-pickup-delay", .4);
-		SmartDashboard::PutNumber("auto-drive-after-duration", 1.95);
+		SmartDashboard::PutNumber("auto-drive-after-duration", 1.85); // On comp: 1.95
 		SmartDashboard::PutNumber("auto-roller-1", .5);
 		SmartDashboard::PutNumber("auto-roller-2", 1);
-		SmartDashboard::PutNumber("auto-wait-for-windup", 3.7);
+		SmartDashboard::PutNumber("auto-wait-for-windup", 2.7);
 		SmartDashboard::PutNumber("auto-drive-while", 0);
 		SmartDashboard::PutNumber("ultra-volt-in", 5.0);
 		
@@ -70,7 +70,7 @@ public:
 		std::string choice = * (std::string*) autoChoose.GetSelected();		
 		shooter.setArmed(shooter.getSwitchRaw());
 		autoSeq.clear();
-		cout << "auto init armed --> " << shooter.isArmed() <<endl; 
+		cout << "auto init armed --> " << shooter.isArmed() <<endl;
 		bool right_hot = true;
 		
 		cout << "Auto mode: " <<choice << endl;
@@ -225,8 +225,8 @@ public:
 		
 		while (IsOperatorControl() && !IsDisabled()) {
 			wd.Feed();
-			SmartDashboard::PutBoolean("compressor-running",
-					!(robot.compressor->GetPressureSwitchValue()));
+			SmartDashboard::PutBoolean("compressor-full",
+					(robot.compressor->GetPressureSwitchValue()));
 			robot.teleop();
 			Wait(0.005); // wait for a motor update time
 		}

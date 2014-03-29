@@ -138,13 +138,13 @@ public:
 	}
 	ControlFlow call(void){
 		cout << "shoot: " << shooter->isArmed() << " : " << shooter->getSwitchRaw() << endl;		
-		if(!shooter->isArmed()){
-			return CONTINUE;
-		}
 		if (timer.Get()>SmartDashboard::GetNumber("shoot-delay")){
 			shooter->setMotor(0);
 			shooter->setArmed(false);
 			return END;
+		}
+		if(!shooter->getSwitchRaw()){
+			return CONTINUE;
 		}
 		shooter->setMotor(1);
 		return CONTINUE;

@@ -80,12 +80,15 @@ namespace CORE{
 			ds = DriverStation::GetInstance();
 		}
 		void init(void){
+			cout << "waitAction" << endl;
 		}
 		virtual ControlFlow call(void){
-			if(!flag){
+			if(*flag){
+				cout << "no wait for mid" << endl;
 				return END;
 			}
-			if(ds->GetMatchTime() < 5 ){
+			if(ds->GetMatchTime() < 5.5 ){
+				cout << "wait for mid" << endl;
 				return CONTINUE;
 			}
 			return END;
