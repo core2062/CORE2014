@@ -114,7 +114,7 @@ void DriveSubsystem::resetRot(void){
 }
 float DriveSubsystem::getDistance(void){
 	float volt = ultra.GetVoltage();
-	float mVolt = volt * 1000; 
+	float mVolt = volt * 1000;
 	SmartDashboard::PutNumber("ultra-raw", mVolt);
 	float sensorVoltage = SmartDashboard::GetNumber("ultra-volt-in");
 	float factor = 1000 * (sensorVoltage / 512);

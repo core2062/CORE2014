@@ -139,23 +139,31 @@ class DriveActionUltra : public Action{
 	float speed;
 	float targetDistance;
 	float currentDistance;
+	float minimumTime;
+	Timer timer;
 public:
-	DriveActionUltra(DriveSubsystem& drive, float speed, float targetDistance):
+	DriveActionUltra(DriveSubsystem& drive, float speed, float targetDistance, float minimumTime):
 		drive(&drive),
 		speed(speed),
-		targetDistance(targetDistance)
+		targetDistance(targetDistance),
+		minimumTime(minimumTime)
+		
 	{}
 	
 	void init(void){
 		currentDistance = drive->getDistance();
+		timer.Reset();
+		timer.Start();
 	}
 	ControlFlow call(void){
-		currentDistance = drive->getDistance();		
-		if (currentDistance > targetDistance){
+		currentDistance = drive->getDistance();
+		if (currentDistance > targetDistance || timer.Get() < minimumTime){
 			drive->arcade_drive(speed,0);
 			return CONTINUE;
 		}else{
 			drive->arcade_drive(0,0);
+			timer.Stop();
+			timer.Reset();
 			return END;
 		}
 	}
