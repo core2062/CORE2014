@@ -2,33 +2,31 @@
 
 void ShooterSubsystem::robotInit(void){
 	SmartDashboard::PutNumber("shoot-delay", 1);
-	SmartDashboard::PutNumber("choochoo-speed", 1);
+	SmartDashboard::PutNumber("choochoo-speed", 0.8);
 	SmartDashboard::PutBoolean("armed", false);
 }
 void ShooterSubsystem::teleopInit(void){
 	if (SmartDashboard::GetBoolean("alt-operator-config")){
 		robot.joystick.register_button("shoot", 2, 2);
 		robot.joystick.register_button("arm", 2, 1);
-		robot.joystick.register_button("unwind", 2 ,4);
+		robot.joystick.register_button("unwind", 2, 4);
 	}else{
 		robot.joystick.register_button("shoot", 2, 1);
 		robot.joystick.register_button("arm", 2, 4);
-		robot.joystick.register_button("unwind", 2 ,6);
+		robot.joystick.register_button("unwind", 2, 6);
 	}
 }
 void ShooterSubsystem::teleop(void){
-	if (state == ARMED){
+	if (state == ARMED) {
 		output = 0;
-		if (robot.joystick.button("shoot")){
+		if (robot.joystick.button("shoot")) {
 			state = FIRING;
 			shootTimer.Reset();
 			shootTimer.Start();
-		}else if (robot.joystick.button("unwind")){
+		} else if (robot.joystick.button("unwind")) {
 			state = UNWIND;
 		}
-		
-		
-	}else if (state == FIRING){
+	} else if (state == FIRING) {
 		output = 1;
 		if (shootTimer.Get()>=SmartDashboard::GetNumber("shoot-delay")){
 			shootTimer.Stop();
@@ -36,7 +34,7 @@ void ShooterSubsystem::teleop(void){
 			output = 0;
 			state = IDLE;
 		}
-	}else if (state == IDLE){
+	} else if (state == IDLE) {
 		output = 0;
 		if (robot.joystick.button("arm")){
 			state = LOADING;
