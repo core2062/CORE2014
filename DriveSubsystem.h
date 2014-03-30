@@ -70,6 +70,7 @@ public:
 	}
 	
 	void robotInit(void);
+	void autoInit(void);
 	void teleopInit(void);
 	void teleop(void);
 	
@@ -164,6 +165,7 @@ public:
 			drive->arcade_drive(0,0);
 			timer.Stop();
 			timer.Reset();
+			cout << "current distance: " << currentDistance << endl;
 			return END;
 		}
 	}

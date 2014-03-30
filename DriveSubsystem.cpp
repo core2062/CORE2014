@@ -5,20 +5,21 @@ void DriveSubsystem::robotInit(void){
 
 	SmartDashboard::PutNumber("ether-a", 1);
 	SmartDashboard::PutNumber("ether-b", 0);
-	
-	SmartDashboard::PutBoolean("drive-high-gear", true);
-	
-//	SmartDashboard::PutNumber("culver-radius-gain", 1.2);
-//	SmartDashboard::PutNumber("culver-raw-gain", 1.5);
-	
-//	sonic.SetAutomaticMode(true);
 }
+
+void DriveSubsystem::autoInit(void) {
+	rightShift.Set(DoubleSolenoid::kReverse);
+	leftShift.Set(DoubleSolenoid::kReverse);
+	SmartDashboard::PutBoolean("drive-high-gear", true);
+}
+
 void DriveSubsystem::teleopInit(void){
 	drive.SetSafetyEnabled(false);
 	robot.compressor->Start();
 
-	rightShift.Set(DoubleSolenoid::kOff);
-	leftShift.Set(DoubleSolenoid::kOff);
+	rightShift.Set(DoubleSolenoid::kReverse);
+	leftShift.Set(DoubleSolenoid::kReverse);
+	SmartDashboard::PutBoolean("drive-high-gear", true);
 	
 	robot.joystick.register_axis("mag", 1, 2);
 	robot.joystick.register_axis("kaj-rot", 1, 4);

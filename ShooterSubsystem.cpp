@@ -6,6 +6,7 @@ void ShooterSubsystem::robotInit(void){
 	SmartDashboard::PutBoolean("armed", false);
 }
 void ShooterSubsystem::teleopInit(void){
+	state = IDLE;
 	if (SmartDashboard::GetBoolean("alt-operator-config")){
 		robot.joystick.register_button("shoot", 2, 2);
 		robot.joystick.register_button("arm", 2, 1);

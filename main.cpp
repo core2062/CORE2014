@@ -47,8 +47,10 @@ public:
 		autoChoose.AddObject("2 Ball 2 Hot", new std::string("two-hot"));
 		SmartDashboard::PutData("auto-chooser", &autoChoose);
 
-		SmartDashboard::PutNumber("auto-drive-minimum-duration", 1);
-		SmartDashboard::PutNumber("auto-drive-speed", .6);
+		SmartDashboard::PutNumber("auto-1-drive-minimum-duration", 1.45);
+		SmartDashboard::PutNumber("auto-2-drive-minimum-duration", 1.65);
+		SmartDashboard::PutNumber("auto-1-drive-speed", .8);
+		SmartDashboard::PutNumber("auto-2-drive-speed", .8);
 		SmartDashboard::PutNumber("auto-cage-delay", .4);
 		SmartDashboard::PutNumber("auto-pickup-delay", .4);
 		SmartDashboard::PutNumber("auto-2-roller-duration", 1);
@@ -70,14 +72,16 @@ public:
 		cout << "auto init armed --> " << shooter.isArmed() <<endl;
 		bool right_hot = true;
 		
+		drive.autoInit();
+		
 		cout << "Auto mode: " <<choice << endl;
 		if (choice == "one-ball"){
 			WindupAction wind_action(shooter);
 			autoSeq.add_action(wind_action);
 			VisionAction hot (&right_hot);
 			autoSeq.add_action(hot);
-			DriveActionUltra drive_after(drive, -SmartDashboard::GetNumber("auto-drive-speed"),
-				SmartDashboard::GetNumber("auto-1-drive-dist"), SmartDashboard::GetNumber("auto-drive-minimum-duration"));
+			DriveActionUltra drive_after(drive, -SmartDashboard::GetNumber("auto-1-drive-speed"),
+				SmartDashboard::GetNumber("auto-1-drive-dist"), SmartDashboard::GetNumber("auto-1-drive-minimum-duration"));
 			autoSeq.add_action(drive_after);
 			PickupAction pickup_action (pickup, 1, SmartDashboard::GetNumber("auto-pickup-delay"));
 			autoSeq.add_action(pickup_action);
@@ -100,8 +104,8 @@ public:
 			autoSeq.add_action(wind_action);
 			PickupAction pickup_out(pickup, 1, SmartDashboard::GetNumber("auto-pickup-delay"));
 			autoSeq.add_action(pickup_out);
-			DriveActionUltra drive_action(drive, -SmartDashboard::GetNumber("auto-drive-speed"),
-					SmartDashboard::GetNumber("auto-2-drive-dist"), SmartDashboard::GetNumber("auto-drive-minimum-duration"));
+			DriveActionUltra drive_action(drive, -SmartDashboard::GetNumber("auto-2-drive-speed"),
+					SmartDashboard::GetNumber("auto-2-drive-dist"), SmartDashboard::GetNumber("auto-2-drive-minimum-duration"));
 			autoSeq.add_action(drive_action);
 			CageAction cage_out(cage, 1, SmartDashboard::GetNumber("auto-cage-delay"));
 			autoSeq.add_action(cage_out);
@@ -115,7 +119,7 @@ public:
 			autoSeq.add_action(wait_for_windup);
 			PickupRollerAction pickup_in(pickup, -1, SmartDashboard::GetNumber("auto-2-roller-duration"));
 			autoSeq.add_action(pickup_in);
-			PickupAction pickup_out_2(pickup, 1, .5);
+			PickupAction pickup_out_2(pickup, 1, SmartDashboard::GetNumber("auto-pickup-delay"));
 			autoSeq.add_action(pickup_out_2);
 			WaitMidpointAction mid;
 			autoSeq.add_action(mid);
