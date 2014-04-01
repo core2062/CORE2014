@@ -56,6 +56,7 @@ public:
 		SmartDashboard::PutNumber("auto-2-roller-duration", 1);
 		SmartDashboard::PutNumber("auto-2-wait-for-windup", 2.7);
 		SmartDashboard::PutNumber("ultra-volt-in", 5.0);
+		SmartDashboard::PutNumber("auto-wait-for-flip", .5);  // conservative estimate
 		
 		SmartDashboard::PutNumber("auto-1-drive-dist", 138);
 		SmartDashboard::PutNumber("auto-2-drive-dist", 138);
@@ -78,6 +79,8 @@ public:
 		if (choice == "one-ball"){
 			WindupAction wind_action(shooter);
 			autoSeq.add_action(wind_action);
+			WaitAction wait_for_flip(SmartDashboard::GetNumber("auto-wait-for-flip"));
+			autoSeq.add_action(wait_for_flip);
 			VisionAction hot (&right_hot);
 			autoSeq.add_action(hot);
 			DriveActionUltra drive_after(drive, -SmartDashboard::GetNumber("auto-1-drive-speed"),
