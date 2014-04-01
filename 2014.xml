@@ -1,11 +1,52 @@
 <xml version="1.0">
 <dashboard>
-	<widget field="auto-drive-while" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1413" y="735"/>
+	<widget field="auto-wait-for-flip" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1384" y="64"/>
 	</widget>
-	<widget field="auto-wait-for-windup" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1399" y="701"/>
+	<widget field="auto-2-drive-speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1372" y="310"/>
+	</widget>
+	<widget field="auto-1-drive-speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1375" y="182"/>
+	</widget>
+	<widget field="auto-2-drive-minimum-duration" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1322" y="420"/>
+	</widget>
+	<widget field="auto-1-drive-minimum-duration" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1323" y="235"/>
+	</widget>
+	<widget field="ultra-dist in Inches" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="273" y="588"/>
+	</widget>
+	<widget field="auto-2-drive-dist" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1386" y="391"/>
 		<height>20</height>
+	</widget>
+	<widget field="auto-1-drive-dist" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1389" y="210"/>
+	</widget>
+	<widget field="auto-2-wait-for-windup" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1358" y="334"/>
+		<height>20</height>
+	</widget>
+	<widget field="auto-2-roller-duration" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1369" y="362"/>
+		<height>20</height>
+	</widget>
+	<widget field="ultra-volt-in" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="306" y="528"/>
+	</widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
+		<location x="1361" y="2"/>
+		<property name="Text" value="auto-drive-after-duration       on comp: 1.95"/>
+	</static-widget>
+	<widget field="compressor-full" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
+		<location x="272" y="496"/>
+		<width>713</width>
+		<height>16</height>
+	</widget>
+	<widget field="ultra-raw" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="318" y="556"/>
 	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Image">
 		<location x="16" y="16"/>
@@ -18,10 +59,10 @@
 		<height>176</height>
 	</widget>
 	<widget field="auto-hot-debug" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.CheckBox">
-		<location x="1515" y="59"/>
+		<location x="1515" y="32"/>
 	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
-		<location x="1424" y="64"/>
+		<location x="1424" y="34"/>
 		<property name="Text" value="auto-hot-debug"/>
 	</static-widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Image">
@@ -40,32 +81,11 @@
 	<widget field="auto-chooser" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
 		<location x="52" y="302"/>
 	</widget>
-	<widget field="auto-roller-2" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1406" y="348"/>
-	</widget>
-	<widget field="auto-roller-1" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1406" y="272"/>
-	</widget>
-	<widget field="auto-drive-after-duration" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1344" y="240"/>
-	</widget>
 	<widget field="auto-pickup-delay" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1379" y="210"/>
-	</widget>
-	<widget field="auto-drive-speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1383" y="96"/>
-		<height>20</height>
-	</widget>
-	<widget field="auto-drive-duration" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1372" y="124"/>
+		<location x="1380" y="119"/>
 	</widget>
 	<widget field="auto-cage-delay" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1387" y="156"/>
-	</widget>
-	<widget field="compressor-running" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
-		<location x="1324" y="400"/>
-		<width>260</width>
-		<height>116</height>
+		<location x="1387" y="89"/>
 	</widget>
 	<widget field="sensor" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
 		<location x="960" y="368"/>
@@ -78,9 +98,9 @@
 		<height>128</height>
 	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.VideoStreamViewerExtension">
-		<location x="274" y="16"/>
-		<width>638</width>
-		<height>501</height>
+		<location x="272" y="16"/>
+		<width>640</width>
+		<height>480</height>
 		<property name="Camera IP Address" value="10.20.62.11"/>
 	</static-widget>
 	<widget field="shoot-delay" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
