@@ -66,6 +66,7 @@ public:
 	}
 	void Autonomous() {
 		Watchdog& wd = GetWatchdog();
+		AxisCamera::GetInstance("10.20.62.11");
 		
 		std::string choice = * (std::string*) autoChoose.GetSelected();
 		shooter.setArmed(shooter.getSwitchRaw());
@@ -137,6 +138,7 @@ public:
 		} else {
 			cout << "Bad auto type" <<endl;
 		}
+		AxisCamera::DeleteInstance();
 	}
 
 	void OperatorControl() {
@@ -152,7 +154,7 @@ public:
 			SmartDashboard::PutBoolean("compressor-full",
 					(robot.compressor->GetPressureSwitchValue()));
 			robot.teleop();
-			Wait(0.005); // wait for a motor update time
+			Wait(0.05); // wait for a motor update time
 		}
 	}
 
@@ -168,7 +170,7 @@ public:
 		while(IsTest() && !IsDisabled()){
 			wd.Feed();
 			robot.compressor->Start();
-			Wait(0.005);
+			Wait(0.05);
 		}
 		robot.compressor->Stop();
 	}
